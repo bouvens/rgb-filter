@@ -41,6 +41,7 @@ export default class Experiment extends Component {
         this.state = {
             ...this.props,
             output: '',
+            image: null,
         }
 
         this.file = new FileReader()
@@ -58,6 +59,8 @@ export default class Experiment extends Component {
     }
 
     componentDidMount () {
+        document.addEventListener('dragover', this.handleDragOver)
+        document.addEventListener('drop', this.handleFileSelect)
         this.img.src = './sample.jpg'
     }
 
@@ -66,17 +69,11 @@ export default class Experiment extends Component {
     }
 
     onImageLoad = ({ target }) => {
-        this.offscreenCanvas.width = target.width
-        this.offscreenCanvas.height = target.height
-        this.offscreenContext.drawImage(target, 0, 0)
-
-        this.mapRGB = getColorsFromImage(this.offscreenContext.getImageData(0, 0, target.width, target.height))
-        this.drawRGB()
+        this.setState({ image: target })
     }
 
     onError = (error) => {
-        debugger
-        this.setState({ output: error })
+        this.setState({ output: 'Try another image, please.' })
     }
 
     canvas
@@ -159,7 +156,23 @@ export default class Experiment extends Component {
         this.canvas.height = CANVAS_SIZE
     }
 
+    paint = () => {
+        const { image } = this.state
+        if (!image) {
+            return
+        }
+
+        this.offscreenCanvas.width = image.width
+        this.offscreenCanvas.height = image.height
+        this.offscreenContext.drawImage(image, 0, 0)
+
+        this.mapRGB = getColorsFromImage(this.offscreenContext.getImageData(0, 0, image.width, image.height))
+        this.drawRGB()
+    }
+
     render () {
+        this.paint()
+
         return (
             <div>
                 <SettersBlock
@@ -182,8 +195,6 @@ export default class Experiment extends Component {
                 </Connector>
                 <hr />
                 <div
-                    onDragOver={this.handleDragOver}
-                    onDrop={this.handleFileSelect}
                     style={{
                         border: '2px dashed #bbb',
                         borderRadius: '15px',
@@ -193,10 +204,12 @@ export default class Experiment extends Component {
                         fontWeight: 'bold',
                         fontFamily: 'sans-serif',
                         color: '#bbb',
+                        marginBottom: '1.5em',
                     }}
                 >
-                    Drop file here
+                    Drop file anywhere on page
                 </div>
+                <div>{this.state.output}</div>
                 <canvas
                     ref={this.refCanvas}
                     style={{
@@ -206,7 +219,6 @@ export default class Experiment extends Component {
                 >
                     {'You are using an outdated browser without support of canvas elements.'}
                 </canvas>
-                <div>{this.state.output}</div>
             </div>
         )
     }
