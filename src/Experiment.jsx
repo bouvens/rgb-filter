@@ -6,11 +6,13 @@ const CANVAS_SIZE = 10
 
 const IDS = {
     multiplier: 'multiplier',
+    divider: 'divider',
 }
 
 const setters = {
     Default: {
-        [IDS.multiplier]: 1,
+        [IDS.multiplier]: 3,
+        [IDS.divider]: 3,
     },
 }
 
@@ -72,7 +74,7 @@ export default class Experiment extends Component {
         this.setState({ image: target })
     }
 
-    onError = (error) => {
+    onError = () => {
         this.setState({ output: 'Try another image, please.' })
     }
 
@@ -127,8 +129,7 @@ export default class Experiment extends Component {
 
         const output = _.map(files, (f) => (
             <li key={f.name}>
-                <strong>{f.name}</strong> ({f.type || 'n/a'}) - {f.size} bytes, last
-                modified: {f.lastModifiedDate.toLocaleDateString()}
+                <strong>{f.name}</strong> ({f.type || 'n/a'}) - {f.size} bytes}
             </li>
         ))
 
@@ -162,9 +163,12 @@ export default class Experiment extends Component {
             return
         }
 
-        this.offscreenCanvas.width = image.width
-        this.offscreenCanvas.height = image.height
-        this.offscreenContext.drawImage(image, 0, 0)
+        const newWidth = image.width / this.state.divider
+        const newHeight = image.height / this.state.divider
+
+        this.offscreenCanvas.width = newWidth
+        this.offscreenCanvas.height = newHeight
+        this.offscreenContext.drawImage(image, 0, 0, newWidth, newHeight)
 
         this.mapRGB = getColorsFromImage(this.offscreenContext.getImageData(0, 0, image.width, image.height))
         this.drawRGB()
@@ -189,7 +193,12 @@ export default class Experiment extends Component {
                 >
                     <Input
                         id={IDS.multiplier}
-                        label="Multiplier"
+                        label="New pixel size / 3"
+                        defaultNum={1}
+                    />
+                    <Input
+                        id={IDS.divider}
+                        label="Times to decrease source"
                         defaultNum={1}
                     />
                 </Connector>
