@@ -5,14 +5,18 @@ import { Connector, Input, SettersBlock } from 'state-control'
 const CANVAS_SIZE = 10
 
 const IDS = {
-    multiplier: 'multiplier',
     divider: 'divider',
+    multiplier: 'multiplier',
 }
 
 const setters = {
     Default: {
-        [IDS.multiplier]: 3,
         [IDS.divider]: 3,
+        [IDS.multiplier]: 3,
+    },
+    '1-1': {
+        [IDS.divider]: 1,
+        [IDS.multiplier]: 1,
     },
 }
 
@@ -103,7 +107,7 @@ export default class Experiment extends Component {
                 newLine = newLine.concat(allTogether)
             }
 
-            data.set(_.concat(newLine, newLine, newLine), (y * width * 3) * 4 * 3)
+            data.set(_.concat(newLine, newLine), (y * width * 3) * 4 * 3)
         }
 
         this.offscreenContext.putImageData(imageData, 0, 0)
@@ -115,12 +119,6 @@ export default class Experiment extends Component {
         this.canvasContext.drawImage(this.offscreenCanvas, 0, 0)
     }
 
-    paintOffscreen = () => {
-        this.canvas.width = this.offscreenCanvas.width
-        this.canvas.height = this.offscreenCanvas.height
-        this.canvasContext.drawImage(this.offscreenCanvas, 0, 0)
-    }
-
     handleFileSelect = (evt) => {
         evt.stopPropagation()
         evt.preventDefault()
@@ -129,7 +127,7 @@ export default class Experiment extends Component {
 
         const output = _.map(files, (f) => (
             <li key={f.name}>
-                <strong>{f.name}</strong> ({f.type || 'n/a'}) - {f.size} bytes}
+                <strong>{f.name}</strong>{` (${f.type || 'n/a'}) - ${f.size} bytes`}
             </li>
         ))
 
@@ -139,16 +137,15 @@ export default class Experiment extends Component {
     }
 
     handleDragOver = (evt) => {
+        const { dataTransfer } = evt
+        dataTransfer.dropEffect = 'copy' // explicitly show this is a copy
         evt.stopPropagation()
         evt.preventDefault()
-        evt.dataTransfer.dropEffect = 'copy' // explicitly show this is a copy
     }
 
     changeHandler = (name, value) => {
         this.setState({ [name]: value })
     }
-
-    selectAll = (control) => control.setSelectionRange(0, control.value.length)
 
     refCanvas = (elem) => {
         this.canvas = elem
@@ -182,24 +179,21 @@ export default class Experiment extends Component {
                 <SettersBlock
                     setters={setters}
                     setHandler={this.changeHandler}
-                    key="setters"
                 />
                 <Connector
                     state={this.state}
                     onChange={this.changeHandler}
-                    onFocus={this.selectAll}
                     className="state-control-input"
-                    key="connector"
+                    defaultNum={1}
+                    type="number"
                 >
                     <Input
-                        id={IDS.multiplier}
-                        label="New pixel size / 3"
-                        defaultNum={1}
+                        id={IDS.divider}
+                        label="Zoom out source"
                     />
                     <Input
-                        id={IDS.divider}
-                        label="Times to decrease source"
-                        defaultNum={1}
+                        id={IDS.multiplier}
+                        label="Zoom in result"
                     />
                 </Connector>
                 <hr />
@@ -223,7 +217,7 @@ export default class Experiment extends Component {
                     ref={this.refCanvas}
                     style={{
                         margin: '1.5em 0',
-                        backgroundColor: 'green',
+                        backgroundColor: 'black',
                     }}
                 >
                     {'You are using an outdated browser without support of canvas elements.'}
