@@ -1,5 +1,5 @@
 import React from 'react'
-import Experiment from './Experiment'
+import Experiment from './RGBFilter'
 
 const App = () => (
     <Experiment />
