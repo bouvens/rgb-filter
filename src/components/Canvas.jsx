@@ -1,17 +1,24 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
 
 const INITIAL_CANVAS_SIZE = 10
 
 export default class Canvas extends React.Component {
     static propTypes = {
-        paint: PropTypes.func,
+        width: PropTypes.number,
+        height: PropTypes.number,
+        imageSmoothingEnabled: PropTypes.bool,
+        multiplier: PropTypes.number,
+        image: PropTypes.object,
         className: PropTypes.string,
     }
 
     static defaultProps = {
-        paint: _.noop(),
+        width: this.width,
+        height: this.height,
+        imageSmoothingEnabled: true,
+        multiplier: 1,
+        image: void 0,
         className: '',
     }
 
@@ -29,13 +36,7 @@ export default class Canvas extends React.Component {
     height = INITIAL_CANVAS_SIZE
 
     paint = () => {
-        const {
-            width = this.width,
-            height = this.height,
-            imageSmoothingEnabled = true,
-            multiplier = 1,
-            image = this.canvas,
-        } = this.props.paint()
+        const { width, height, imageSmoothingEnabled, multiplier, image = this.canvas } = this.props
 
         this.canvas.width = width * multiplier
         this.canvas.height = height * multiplier

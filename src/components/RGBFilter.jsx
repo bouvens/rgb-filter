@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import { Connector, Input, SettersBlock } from 'state-control'
+import DragAndDrop from './DropImage'
 import Canvas from './Canvas'
 import { IDS, SETTERS } from './constants'
 import { getColorsFromImage } from './utils'
 import style from './RGBFilter.css'
 
 export default class RGBFilter extends Component {
-    // noinspection JSUnusedGlobalSymbols
     static defaultProps = {
         ...SETTERS.Default,
     }
@@ -15,78 +15,24 @@ export default class RGBFilter extends Component {
     constructor (props) {
         super(props)
 
-        this.state = {
-            ...this.props,
-            output: '',
-            image: null,
-        }
-
-        this.file = new FileReader()
-        this.file.onload = this.onFileLoad
-        this.file.onerror = this.onError
-
-        this.img = new Image()
-        this.img.onload = this.onImageLoad
-        this.img.onerror = this.onError
+        this.state = { ...this.props }
 
         this.offscreenCanvas = document.createElement('canvas')
         this.offscreenContext = this.offscreenCanvas.getContext('2d')
-
-        this.mapRGB = []
-    }
-
-    componentDidMount () {
-        document.addEventListener('dragover', this.handleDragOver)
-        // document.addEventListener('dragenter', this.handleDragOver)
-        // document.addEventListener('dragleave', this.handleDragOver)
-        document.addEventListener('drop', this.handleFileSelect)
-        this.img.src = './sample.jpg'
-    }
-
-    onFileLoad = ({ target }) => {
-        this.img.src = target.result
-    }
-
-    onImageLoad = ({ target }) => {
-        this.setState({ image: target })
-    }
-
-    onError = () => {
-        this.setState({ output: 'Try another image, please.' })
-    }
-
-    handleFileSelect = (evt) => {
-        evt.stopPropagation()
-        evt.preventDefault()
-
-        const { files } = evt.dataTransfer
-
-        const output = _.map(files, (f) => (
-            <li key={f.name}>
-                <strong>{f.name}</strong>{` (${f.type || 'n/a'}) - ${f.size} bytes`}
-            </li>
-        ))
-
-        this.file.readAsDataURL(files[0])
-
-        this.setState({ output })
-    }
-
-    handleDragOver = (evt) => {
-        const { dataTransfer } = evt
-        dataTransfer.dropEffect = 'copy' // explicitly show this is a copy
-        evt.stopPropagation()
-        evt.preventDefault()
     }
 
     changeHandler = (name, value) => {
         this.setState({ [name]: value })
     }
 
-    paint = () => {
+    handleDrop = (image) => {
+        this.setState({ image })
+    }
+
+    processImage = () => {
         const { image } = this.state
         if (!image) {
-            return {}
+            return
         }
 
         let newWidth = image.width / this.state.divider
@@ -96,13 +42,15 @@ export default class RGBFilter extends Component {
         this.offscreenCanvas.height = newHeight
         this.offscreenContext.drawImage(image, 0, 0, newWidth, newHeight)
 
-        this.mapRGB = getColorsFromImage(this.offscreenContext.getImageData(0, 0, image.width, image.height))
+        const mapRGB = getColorsFromImage(this.offscreenContext.getImageData(0, 0, newWidth, newHeight))
 
         const { width, height } = this.offscreenCanvas
         newWidth = width * 3
         newHeight = height * 3
+
         this.offscreenCanvas.width = newWidth
         this.offscreenCanvas.height = newHeight
+
         const imageData = this.offscreenContext.getImageData(0, 0, newWidth, newHeight)
         const { data } = imageData
 
@@ -110,7 +58,7 @@ export default class RGBFilter extends Component {
             let newLine = []
 
             for (let x = 0; x < width; x += 1) {
-                const { r, g, b } = this.mapRGB[x][y]
+                const { r, g, b } = mapRGB[x][y]
                 const red = [r, 0, 0, 255]
                 const green = [0, g, 0, 255]
                 const blue = [0, 0, b, 255]
@@ -124,16 +72,16 @@ export default class RGBFilter extends Component {
 
         this.offscreenContext.putImageData(imageData, 0, 0)
 
-        return {
-            width: newWidth,
-            height: newHeight,
-            imageSmoothingEnabled: false,
-            multiplier: this.state.multiplier,
-            image: this.offscreenCanvas,
-        }
+        this.width = newWidth
+        this.height = newHeight
+        this.imageSmoothingEnabled = false
+        this.multiplier = this.state.multiplier
+        this.image = this.offscreenCanvas
     }
 
     render () {
+        this.processImage()
+
         return (
             <div>
                 <SettersBlock
@@ -157,12 +105,16 @@ export default class RGBFilter extends Component {
                     />
                 </Connector>
                 <hr />
-                <div className={style.dropZone}>
-                    Drop file anywhere on page
-                </div>
-                <div>{this.state.output}</div>
+                <DragAndDrop
+                    onDrop={this.handleDrop}
+                    defaultImage="./sample.jpg"
+                />
                 <Canvas
-                    paint={this.paint}
+                    width={this.width}
+                    height={this.height}
+                    imageSmoothingEnabled={this.imageSmoothingEnabled}
+                    multiplier={this.multiplier}
+                    image={this.image}
                     className={style.canvas}
                 >
                     {'You are using an outdated browser without support of canvas elements.'}
