@@ -11,10 +11,8 @@ export default class RGBFilter extends Component {
         ...SETTERS.Default,
     }
 
-    constructor (props) {
-        super(props)
-
-        this.state = { ...this.props }
+    state = {
+        ...this.props,
     }
 
     changeHandler = (name, value) => {
@@ -26,12 +24,12 @@ export default class RGBFilter extends Component {
     }
 
     processImage = () => {
-        const { image } = this.state
+        const { image, divider } = this.state
         if (!image) {
             return {}
         }
 
-        return toRGB(image, this.state.divider)
+        return toRGB(image, divider)
     }
 
     render () {

@@ -47,7 +47,9 @@ export default class Canvas extends React.Component {
 
     refCanvas = (elem) => {
         this.canvas = elem
-        this.canvasContext = elem.getContext('2d')
+        if (elem) {
+            this.canvasContext = elem.getContext('2d')
+        }
     }
 
     render () {
