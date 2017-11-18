@@ -3,6 +3,9 @@ export const IDS = {
     limit: 'limit',
     noise: 'noise',
     sample: 'sample',
+    animate: 'animate',
+    frames: 'frames',
+    delay: 'delay',
 }
 
 export const IMAGES = [

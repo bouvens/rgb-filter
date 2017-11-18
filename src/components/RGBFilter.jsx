@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Connector, Input } from 'state-control'
+import _ from 'lodash'
 import DragAndDrop from './DropImage'
 import Canvas from './Canvas'
 import { IDS, IMAGES } from '../constants'
@@ -13,6 +14,8 @@ export default class RGBFilter extends Component {
         [IDS.limit]: 800,
         [IDS.noise]: 10,
         [IDS.sample]: IMAGES[0],
+        [IDS.frames]: 5,
+        [IDS.delay]: 200,
     }
 
     state = {
@@ -28,6 +31,10 @@ export default class RGBFilter extends Component {
     }
 
     getSrc = (name) => `./images/${name}`
+
+    setImage = (blob) => {
+        this.image.src = window.URL.createObjectURL(blob)
+    }
 
     handleDrop = (image) => {
         this.setState({ image })
@@ -46,16 +53,21 @@ export default class RGBFilter extends Component {
     processImage = () => {
         const { image } = this.state
         if (!image) {
-            return {}
+            return
         }
 
-        return toRGB(image, {
+        toRGB(image, {
             divider: this.getDivider(),
             noise: this.state.noise,
+            frames: this.state.frames,
+            delay: this.state.delay,
+            getBlob: this.setImage,
         })
     }
 
     render () {
+        this.processImage()
+
         return (
             <div>
                 <DragAndDrop
@@ -82,7 +94,18 @@ export default class RGBFilter extends Component {
                             label="Color noise:"
                             step={5}
                         />
+                        <Input
+                            id={IDS.frames}
+                            label="Frames:"
+                            step={1}
+                        />
+                        <Input
+                            id={IDS.delay}
+                            label="Delay:"
+                            step={50}
+                        />
                     </Connector>
+                    <button onClick={this.processImage}>Render</button>
                 </div>
                 <div className={style.samples}>
                     <p>Or select one of samples:</p>
@@ -95,14 +118,19 @@ export default class RGBFilter extends Component {
                         />
                     ))}
                 </div>
-                <Canvas
-                    {...this.processImage()}
-                    multiplier={this.state.multiplier}
-                    imageSmoothingEnabled={false}
-                    className={style.canvas}
-                >
-                    {'You are using an outdated browser without support of canvas elements.'}
-                </Canvas>
+                <div className={style.animation}>
+                    <img
+                        ref={(e) => { this.image = e }}
+                    />
+                </div>
+                {/*<Canvas*/}
+                    {/*{...this.processImage()}*/}
+                    {/*multiplier={this.state.multiplier}*/}
+                    {/*imageSmoothingEnabled={false}*/}
+                    {/*className={style.canvas}*/}
+                {/*>*/}
+                    {/*{'You are using an outdated browser without support of canvas elements.'}*/}
+                {/*</Canvas>*/}
             </div>
         )
     }
