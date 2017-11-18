@@ -4,6 +4,7 @@
 }
 
 .controls label {
+    color: #eee;
     text-align: right;
     width: 8em;
 }

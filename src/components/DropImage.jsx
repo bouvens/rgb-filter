@@ -99,7 +99,7 @@ export default class DropImage extends Component {
         } else {
             output = _.map(files, (f) => (
                 <li key={f.name}>
-                    <strong>{f.name}</strong>{` (${f.type || 'n/a'}) - ${f.size} bytes`}
+                    {`${f.name} (${f.type || 'n/a'}) - ${f.size} bytes`}
                 </li>
             ))
         }
