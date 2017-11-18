@@ -24,13 +24,14 @@ const getDeviation = (d) => Math.random() * d
 function reduceImage (image, { divider, noise }) {
     const width = image.width / divider
     const height = image.height / divider
-    if (width < 1 || height < 1) {
-        return { data: [], noise }
-    }
 
     getCanvas().width = width
     getCanvas().height = height
     getContext().drawImage(image, 0, 0, width, height)
+
+    if (getCanvas().width < 1 || getCanvas().height < 1) {
+        return { data: [], noise }
+    }
 
     return {
         data: getContext().getImageData(0, 0, width, height),

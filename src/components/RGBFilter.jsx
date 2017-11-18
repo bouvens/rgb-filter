@@ -7,17 +7,18 @@ import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
 const PROCESSORS = {
-    [IDS.limit]: (value) => Math.min(value, 1000),
-    [IDS.noise]: (value) => Math.min(value, 100),
+    [IDS.multiplier]: (value) => Math.max(Math.min(value, 16), 1),
+    [IDS.limit]: (value) => Math.max(Math.min(value, 1000), 1),
+    [IDS.noise]: (value) => Math.max(Math.min(value, 100), 0),
 }
 
 const transparent = (value) => value
 
 export default class RGBFilter extends Component {
     static defaultProps = {
-        [IDS.multiplier]: 3,
+        [IDS.multiplier]: 2,
         [IDS.limit]: 800,
-        [IDS.noise]: 15,
+        [IDS.noise]: 10,
     }
 
     state = {
@@ -38,9 +39,7 @@ export default class RGBFilter extends Component {
 
     handleChange = (name, value) => {
         this.setState({
-            [name]: Math.round(
-                Math.max((PROCESSORS[name] || transparent)(value), 0)
-            ),
+            [name]: Math.round((PROCESSORS[name] || transparent)(value)),
         })
     }
 
