@@ -19,21 +19,26 @@ function getContext () {
     return offScreenContext
 }
 
-function reduceImage (image, divider) {
+const getDeviation = (d) => Math.random() * d
+
+function reduceImage (image, { divider, noise }) {
     const width = image.width / divider
     const height = image.height / divider
     if (width < 1 || height < 1) {
-        return []
+        return { data: [], noise }
     }
 
     getCanvas().width = width
     getCanvas().height = height
     getContext().drawImage(image, 0, 0, width, height)
 
-    return getContext().getImageData(0, 0, width, height)
+    return {
+        data: getContext().getImageData(0, 0, width, height),
+        noise,
+    }
 }
 
-function mapToRGB ({ data, width, height }) {
+function mapToRGB ({ data: { data, width, height }, noise }) {
     const mapRGB = []
 
     for (let y = 0; y < height; y += 1) {
@@ -45,10 +50,10 @@ function mapToRGB ({ data, width, height }) {
         }
     }
 
-    return mapRGB
+    return { mapRGB, noise: (noise / 100) * 255 }
 }
 
-function makeItRGB (mapRGB) {
+function makeItRGB ({ mapRGB, noise }) {
     const width = mapRGB.length
     if (width === 0) {
         return {}
@@ -67,7 +72,12 @@ function makeItRGB (mapRGB) {
         let newLine = []
 
         for (let x = 0; x < width; x += 1) {
-            const { r, g, b } = mapRGB[x][y]
+            let { r, g, b } = mapRGB[x][y]
+
+            r += getDeviation(noise)
+            g += getDeviation(noise)
+            b += getDeviation(noise)
+
             const red = [r, 0, 0, 255]
             const green = [0, g, 0, 255]
             const blue = [0, 0, b, 255]
@@ -76,7 +86,7 @@ function makeItRGB (mapRGB) {
             newLine = newLine.concat(allTogether)
         }
 
-        data.set(_.concat(newLine, newLine), (y * width * 3) * 4 * 3)
+        data.set(_.concat(newLine, newLine, newLine), (y * width * 3) * 4 * 3)
     }
 
     getContext().putImageData(imageData, 0, 0)

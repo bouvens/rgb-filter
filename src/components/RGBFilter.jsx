@@ -6,10 +6,18 @@ import { IDS } from './constants'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
+const PROCESSORS = {
+    [IDS.limit]: (value) => Math.min(value, 1000),
+    [IDS.noise]: (value) => Math.min(value, 100),
+}
+
+const transparent = (value) => value
+
 export default class RGBFilter extends Component {
     static defaultProps = {
         [IDS.multiplier]: 3,
-        [IDS.limit]: 900,
+        [IDS.limit]: 800,
+        [IDS.noise]: 15,
     }
 
     state = {
@@ -30,7 +38,9 @@ export default class RGBFilter extends Component {
 
     handleChange = (name, value) => {
         this.setState({
-            [name]: value,
+            [name]: Math.round(
+                Math.max((PROCESSORS[name] || transparent)(value), 0)
+            ),
         })
     }
 
@@ -40,7 +50,10 @@ export default class RGBFilter extends Component {
             return {}
         }
 
-        return toRGB(image, this.getDivider())
+        return toRGB(image, {
+            divider: this.getDivider(),
+            noise: this.state.noise,
+        })
     }
 
     render () {
@@ -63,6 +76,12 @@ export default class RGBFilter extends Component {
                     <Input
                         id={IDS.limit}
                         label="Size:"
+                        step={100}
+                    />
+                    <Input
+                        id={IDS.noise}
+                        label="Color noise:"
+                        step={5}
                     />
                 </Connector>
                 <Canvas
