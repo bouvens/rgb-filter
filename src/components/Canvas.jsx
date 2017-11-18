@@ -22,10 +22,6 @@ export default class Canvas extends React.Component {
         className: '',
     }
 
-    componentDidMount () {
-        this.paint()
-    }
-
     componentDidUpdate () {
         this.paint()
     }
@@ -36,7 +32,11 @@ export default class Canvas extends React.Component {
     height = INITIAL_CANVAS_SIZE
 
     paint = () => {
-        const { width, height, imageSmoothingEnabled, multiplier, image = this.canvas } = this.props
+        const { width, height, imageSmoothingEnabled, multiplier, image } = this.props
+
+        if (!image) {
+            return
+        }
 
         this.canvas.width = width * multiplier
         this.canvas.height = height * multiplier
