@@ -1,26 +1,53 @@
 import React, { Component } from 'react'
-import { Connector, Input, SettersBlock } from 'state-control'
+import { Connector, Input } from 'state-control'
 import DragAndDrop from './DropImage'
 import Canvas from './Canvas'
-import { IDS, SETTERS } from './constants'
+import { IDS } from './constants'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
 export default class RGBFilter extends Component {
     static defaultProps = {
-        ...SETTERS.Default,
+        [IDS.divider]: 1,
+        [IDS.multiplier]: 3,
+        [IDS.limit]: 900,
     }
 
     state = {
         ...this.props,
     }
 
-    changeHandler = (name, value) => {
-        this.setState({ [name]: value })
+    getDivider = ({
+        image = this.state.image,
+        limit = this.state.limit,
+        multiplier = this.state.multiplier,
+    }) => {
+        const maxSize = Math.max(image.width, image.height)
+        let { divider } = this.state
+
+        const realLimit = limit / multiplier / 3
+        if (maxSize > realLimit) {
+            divider = Math.ceil(maxSize / realLimit)
+        }
+
+        return divider
     }
 
     handleDrop = (image) => {
-        this.setState({ image })
+        this.setState({ image, divider: this.getDivider({ image }) })
+    }
+
+    handleChange = (name, value) => {
+        let { divider } = this.state
+
+        if (name === IDS.limit) {
+            divider = this.getDivider({ limit: value })
+        }
+
+        this.setState({
+            divider,
+            [name]: value,
+        })
     }
 
     processImage = () => {
@@ -35,13 +62,9 @@ export default class RGBFilter extends Component {
     render () {
         return (
             <div>
-                <SettersBlock
-                    setters={SETTERS}
-                    setHandler={this.changeHandler}
-                />
                 <Connector
                     state={this.state}
-                    onChange={this.changeHandler}
+                    onChange={this.handleChange}
                     className="state-control-input"
                     defaultNum={1}
                     type="number"
@@ -53,6 +76,10 @@ export default class RGBFilter extends Component {
                     <Input
                         id={IDS.multiplier}
                         label="Zoom in result"
+                    />
+                    <Input
+                        id={IDS.limit}
+                        label="Size limit"
                     />
                 </Connector>
                 <hr />

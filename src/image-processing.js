@@ -22,6 +22,9 @@ function getContext () {
 function reduceImage (image, divider) {
     const width = image.width / divider
     const height = image.height / divider
+    if (width < 1) {
+        return []
+    }
 
     getCanvas().width = width
     getCanvas().height = height
@@ -47,6 +50,9 @@ function mapToRGB ({ data, width, height }) {
 
 function makeItRGB (mapRGB) {
     const width = mapRGB.length
+    if (width === 0) {
+        return {}
+    }
     const height = mapRGB[0].length
     const newWidth = width * 3
     const newHeight = height * 3
