@@ -1,8 +1,8 @@
 import React from 'react'
-import Experiment from './RGBFilter'
+import RGBFilter from './RGBFilter'
 
 const App = () => (
-    <Experiment />
+    <RGBFilter />
 )
 
 export default App
