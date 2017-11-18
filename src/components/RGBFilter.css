@@ -2,12 +2,23 @@
     margin: 1.5em 0;
 }
 
+.controls {
+    float: left;
+    margin-right: 10em;
+}
+
 .controls label {
-    color: #eee;
     text-align: right;
     width: 8em;
 }
 
 .controls input {
     width: 4em;
+}
+
+.samples img {
+    width: 100px;
+    vertical-align: middle;
+    margin-right: 2em;
+    cursor: pointer;
 }

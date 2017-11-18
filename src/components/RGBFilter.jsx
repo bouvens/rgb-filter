@@ -6,6 +6,12 @@ import { IDS } from './constants'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
+const IMAGES = [
+    'moon.jpg',
+    'sunset.jpg',
+    'wikipe-tan.png',
+]
+
 const PROCESSORS = {
     [IDS.multiplier]: (value) => Math.max(Math.min(value, 16), 1),
     [IDS.limit]: (value) => Math.max(Math.min(value, 1000), 1),
@@ -19,6 +25,7 @@ export default class RGBFilter extends Component {
         [IDS.multiplier]: 2,
         [IDS.limit]: 800,
         [IDS.noise]: 10,
+        [IDS.sample]: IMAGES[0],
     }
 
     state = {
@@ -33,6 +40,8 @@ export default class RGBFilter extends Component {
         return maxSize / realLimit
     }
 
+    getSrc = (name) => `./images/${name}`
+
     handleDrop = (image) => {
         this.setState({ image })
     }
@@ -41,6 +50,10 @@ export default class RGBFilter extends Component {
         this.setState({
             [name]: Math.round((PROCESSORS[name] || transparent)(value)),
         })
+    }
+
+    selectImage = (sample) => () => {
+        this.setState({ sample })
     }
 
     processImage = () => {
@@ -60,29 +73,41 @@ export default class RGBFilter extends Component {
             <div>
                 <DragAndDrop
                     onDrop={this.handleDrop}
-                    defaultImage="./sample.jpg"
+                    defaultImage={this.getSrc(this.state.sample)}
                 />
-                <Connector
-                    state={this.state}
-                    onChange={this.handleChange}
-                    className={style.controls}
-                    type="number"
-                >
-                    <Input
-                        id={IDS.multiplier}
-                        label="Zoom in result:"
-                    />
-                    <Input
-                        id={IDS.limit}
-                        label="Size:"
-                        step={100}
-                    />
-                    <Input
-                        id={IDS.noise}
-                        label="Color noise:"
-                        step={5}
-                    />
-                </Connector>
+                <div className={style.controls}>
+                    <Connector
+                        state={this.state}
+                        onChange={this.handleChange}
+                        type="number"
+                    >
+                        <Input
+                            id={IDS.multiplier}
+                            label="Zoom in result:"
+                        />
+                        <Input
+                            id={IDS.limit}
+                            label="Size:"
+                            step={100}
+                        />
+                        <Input
+                            id={IDS.noise}
+                            label="Color noise:"
+                            step={5}
+                        />
+                    </Connector>
+                </div>
+                <div className={style.samples}>
+                    <p>Or select one of samples:</p>
+                    {_.map(IMAGES, (image) => (
+                        <img
+                            key={image}
+                            src={this.getSrc(image)}
+                            onClick={this.selectImage(image)}
+                            alt=""
+                        />
+                    ))}
+                </div>
                 <Canvas
                     {...this.processImage()}
                     multiplier={this.state.multiplier}

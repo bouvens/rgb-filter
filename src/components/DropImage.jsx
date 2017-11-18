@@ -42,6 +42,12 @@ export default class DropImage extends Component {
         document.addEventListener('drop', this.handleFileSelect)
     }
 
+    componentWillReceiveProps (nextProps) {
+        if (!_.isEqual(this.props.defaultImage, nextProps.defaultImage)) {
+            this.img.src = nextProps.defaultImage
+        }
+    }
+
     onFileLoad = ({ target }) => {
         this.img.src = target.result
     }
