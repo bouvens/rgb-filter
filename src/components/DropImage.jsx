@@ -116,10 +116,10 @@ export default class DropImage extends Component {
     render () {
         return (
             <div>
-                <div key="zone" className={style.dropZone}>
-                    Drop file anywhere on page
+                <div className={style.header}>
+                    Drop image anywhere on the page
                 </div>
-                <div key="output">{this.state.output}</div>
+                <div className={style.output}>{this.state.output}</div>
                 <BodyPortal>
                     {this.state.isDragOver &&
                     <div
