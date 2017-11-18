@@ -22,7 +22,7 @@ function getContext () {
 function reduceImage (image, divider) {
     const width = image.width / divider
     const height = image.height / divider
-    if (width < 1) {
+    if (width < 1 || height < 1) {
         return []
     }
 
