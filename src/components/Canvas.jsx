@@ -40,7 +40,11 @@ export default class Canvas extends React.Component {
 
         this.canvas.width = width * multiplier
         this.canvas.height = height * multiplier
+
         this.canvasContext.imageSmoothingEnabled = imageSmoothingEnabled
+        this.canvasContext.msImageSmoothingEnabled = imageSmoothingEnabled
+        this.canvasContext.mozImageSmoothingEnabled = imageSmoothingEnabled
+
         this.canvasContext.scale(multiplier, multiplier)
         this.canvasContext.drawImage(image, 0, 0)
     }
