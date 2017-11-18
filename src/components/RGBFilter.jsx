@@ -2,23 +2,10 @@ import React, { Component } from 'react'
 import { Connector, Input } from 'state-control'
 import DragAndDrop from './DropImage'
 import Canvas from './Canvas'
-import { IDS } from './constants'
+import { IDS, IMAGES } from '../constants'
+import { PROCESSORS, transparent } from '../utils'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
-
-const IMAGES = [
-    'moon.jpg',
-    'sunset.jpg',
-    'wikipe-tan.png',
-]
-
-const PROCESSORS = {
-    [IDS.multiplier]: (value) => Math.max(Math.min(value, 16), 1),
-    [IDS.limit]: (value) => Math.max(Math.min(value, 1000), 1),
-    [IDS.noise]: (value) => Math.max(Math.min(value, 100), 0),
-}
-
-const transparent = (value) => value
 
 export default class RGBFilter extends Component {
     static defaultProps = {

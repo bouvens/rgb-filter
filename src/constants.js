@@ -4,3 +4,9 @@ export const IDS = {
     noise: 'noise',
     sample: 'sample',
 }
+
+export const IMAGES = [
+    'moon.jpg',
+    'sunset.jpg',
+    'wikipe-tan.png',
+]
