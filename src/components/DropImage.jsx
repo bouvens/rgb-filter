@@ -33,7 +33,7 @@ export default class DropImage extends Component {
         this.img.onload = this.onImageLoad
         this.img.onerror = this.onError
         this.img.src = this.props.defaultImage
-        this.img.onloadend = this.onImageEnd
+        this.img.crossOrigin = 'Anonymous'
     }
 
     componentDidMount () {
@@ -49,7 +49,7 @@ export default class DropImage extends Component {
     onError = () => {
         this.setState({
             isFileLoading: false,
-            output: 'Try another image, please.',
+            output: 'Try another image, please. If this is an image from other website try to save it locally before dragging.',
         })
     }
 
@@ -89,14 +89,26 @@ export default class DropImage extends Component {
         evt.preventDefault()
 
         const { files } = evt.dataTransfer
+        const link = evt.dataTransfer.getData('text')
 
-        const output = _.map(files, (f) => (
-            <li key={f.name}>
-                <strong>{f.name}</strong>{` (${f.type || 'n/a'}) - ${f.size} bytes`}
-            </li>
-        ))
+        let output
 
-        this.file.readAsDataURL(files[0])
+        if (_.isEmpty(files) && evt.dataTransfer.getData('text')) {
+            output = ''
+            this.img.src = link
+        } else {
+            output = _.map(files, (f) => (
+                <li key={f.name}>
+                    <strong>{f.name}</strong>{` (${f.type || 'n/a'}) - ${f.size} bytes`}
+                </li>
+            ))
+        }
+
+        try {
+            this.file.readAsDataURL(files[0])
+        } catch (e) {
+            this.onError(e)
+        }
 
         this.setState({ output })
     }
