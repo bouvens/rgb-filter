@@ -2,3 +2,12 @@
     margin: 1.5em 0;
     background-color: black;
 }
+
+.controls label {
+    text-align: right;
+    width: 8em;
+}
+
+.controls input {
+    width: 4em;
+}

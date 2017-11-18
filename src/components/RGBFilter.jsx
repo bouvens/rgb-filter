@@ -8,7 +8,6 @@ import style from './RGBFilter.css'
 
 export default class RGBFilter extends Component {
     static defaultProps = {
-        [IDS.divider]: 1,
         [IDS.multiplier]: 3,
         [IDS.limit]: 900,
     }
@@ -17,76 +16,55 @@ export default class RGBFilter extends Component {
         ...this.props,
     }
 
-    getDivider = ({
-        image = this.state.image,
-        limit = this.state.limit,
-        multiplier = this.state.multiplier,
-    }) => {
+    getDivider = () => {
+        const { image, limit, multiplier } = this.state
         const maxSize = Math.max(image.width, image.height)
-        let { divider } = this.state
-
         const realLimit = limit / multiplier / 3
-        if (maxSize > realLimit) {
-            divider = Math.ceil(maxSize / realLimit)
-        }
 
-        return divider
+        return maxSize / realLimit
     }
 
     handleDrop = (image) => {
-        this.setState({ image, divider: this.getDivider({ image }) })
+        this.setState({ image })
     }
 
     handleChange = (name, value) => {
-        let { divider } = this.state
-
-        if (name === IDS.limit) {
-            divider = this.getDivider({ limit: value })
-        }
-
         this.setState({
-            divider,
             [name]: value,
         })
     }
 
     processImage = () => {
-        const { image, divider } = this.state
+        const { image } = this.state
         if (!image) {
             return {}
         }
 
-        return toRGB(image, divider)
+        return toRGB(image, this.getDivider())
     }
 
     render () {
         return (
             <div>
-                <Connector
-                    state={this.state}
-                    onChange={this.handleChange}
-                    className="state-control-input"
-                    defaultNum={1}
-                    type="number"
-                >
-                    <Input
-                        id={IDS.divider}
-                        label="Zoom out source"
-                    />
-                    <Input
-                        id={IDS.multiplier}
-                        label="Zoom in result"
-                    />
-                    <Input
-                        id={IDS.limit}
-                        label="Size limit"
-                    />
-                </Connector>
-                <hr />
                 <DragAndDrop
                     onDrop={this.handleDrop}
                     defaultImage="./sample.jpg"
                 />
+                <Connector
+                    state={this.state}
+                    onChange={this.handleChange}
+                    className={style.controls}
+                    type="number"
+                >
+                    <Input
+                        id={IDS.multiplier}
+                        label="Zoom in result:"
+                    />
+                    <Input
+                        id={IDS.limit}
+                        label="Size:"
+                    />
+                </Connector>
                 <Canvas
                     {...this.processImage()}
                     multiplier={this.state.multiplier}
