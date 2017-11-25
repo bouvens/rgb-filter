@@ -133,7 +133,6 @@ function makeItRGB ({
     gif.on('finished', getBlob)
 
     gif.render()
-    console.count('finished')
 }
 
 export const toRGB = _.flow([reduceImage, mapToRGB, makeItRGB])

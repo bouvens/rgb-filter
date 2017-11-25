@@ -9,10 +9,13 @@ import style from './RGBFilter.css'
 
 let cache
 
+const getSrc = (name) => `./images/${name}`
+const throbber = getSrc('triangles.svg')
+
 export default class RGBFilter extends Component {
     static defaultProps = {
         [IDS.multiplier]: 2,
-        [IDS.limit]: 800,
+        [IDS.limit]: 400,
         [IDS.noise]: 10,
         [IDS.sample]: IMAGES[0],
         [IDS.frames]: 5,
@@ -30,8 +33,6 @@ export default class RGBFilter extends Component {
 
         return maxSize / realLimit
     }
-
-    getSrc = (name) => `./images/${name}`
 
     setImage = (blob) => {
         this.image.src = window.URL.createObjectURL(blob)
@@ -52,13 +53,18 @@ export default class RGBFilter extends Component {
     }
 
     processImage = () => {
-        const { image = {}, noise, frames, delay, multiplier } = this.state
-        const newCache = { image: image.src, noise, frames, delay, multiplier }
-
-        if (!image.src || _.isEqual(cache, newCache)) {
+        const { image, noise, frames, delay, multiplier } = this.state
+        if (!image) {
             return
         }
 
+        const newCache = { image: image.src, divider: this.getDivider(), noise, frames, delay, multiplier }
+
+        if (_.isEqual(cache, newCache)) {
+            return
+        }
+
+        this.image.src = throbber
         cache = newCache
 
         toRGB(image, {
@@ -66,8 +72,8 @@ export default class RGBFilter extends Component {
             noise: this.state.noise,
             frames: this.state.frames,
             delay: this.state.delay,
-            getBlob: this.setImage,
             multiplier: this.state.multiplier,
+            getBlob: this.setImage,
         })
     }
 
@@ -78,7 +84,7 @@ export default class RGBFilter extends Component {
             <div>
                 <DragAndDrop
                     onDrop={this.handleDrop}
-                    defaultImage={this.getSrc(this.state.sample)}
+                    defaultImage={getSrc(this.state.sample)}
                 />
                 <div className={style.controls}>
                     <Connector
@@ -111,14 +117,13 @@ export default class RGBFilter extends Component {
                             step={50}
                         />
                     </Connector>
-                    <button onClick={this.processImage}>Render</button>
                 </div>
                 <div className={style.samples}>
                     <p>Or select one of samples:</p>
                     {_.map(IMAGES, (image) => (
                         <img
                             key={image}
-                            src={this.getSrc(image)}
+                            src={getSrc(image)}
                             onClick={this.selectImage(image)}
                             alt=""
                         />
