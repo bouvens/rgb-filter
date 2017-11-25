@@ -1,23 +1,26 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 
-let offScreenCanvas
-let offScreenContext
+const SHADOW = 'SHADOW'
+const SCALED = 'SCALED'
 
-function getCanvas () {
-    if (!offScreenCanvas) {
-        offScreenCanvas = document.createElement('canvas')
+const offScreenCanvas = []
+const offScreenContext = []
+
+function getCanvas (id = SHADOW) {
+    if (!offScreenCanvas[id]) {
+        offScreenCanvas[id] = document.createElement('canvas')
     }
 
-    return offScreenCanvas
+    return offScreenCanvas[id]
 }
 
-function getContext () {
-    if (!offScreenContext) {
-        offScreenContext = getCanvas().getContext('2d')
+function getContext (id = SHADOW) {
+    if (!offScreenContext[id]) {
+        offScreenContext[id] = getCanvas(id).getContext('2d')
     }
 
-    return offScreenContext
+    return offScreenContext[id]
 }
 
 const getDeviation = (d) => Math.random() * d
@@ -55,7 +58,17 @@ function mapToRGB ({ data: { data, width, height }, options }) {
     return { mapRGB, options }
 }
 
-function makeItRGB ({ mapRGB, options: { noise: initNoise, frames, delay, getBlob } }) {
+function makeItRGB ({
+    mapRGB,
+    options: {
+        noise: initNoise,
+        frames,
+        multiplier,
+        imageSmoothingEnabled = false,
+        delay,
+        getBlob,
+    },
+}) {
     const noise = (initNoise / 100) * 255
     const width = mapRGB.length
     if (width === 0) {
@@ -101,7 +114,17 @@ function makeItRGB ({ mapRGB, options: { noise: initNoise, frames, delay, getBlo
 
         getContext().putImageData(imageData, 0, 0)
 
-        gif.addFrame(getCanvas(), {
+        getCanvas(SCALED).width = getCanvas().width * multiplier
+        getCanvas(SCALED).height = getCanvas().height * multiplier
+
+        getContext(SCALED).imageSmoothingEnabled = imageSmoothingEnabled
+        getContext(SCALED).msImageSmoothingEnabled = imageSmoothingEnabled
+        getContext(SCALED).mozImageSmoothingEnabled = imageSmoothingEnabled
+
+        getContext(SCALED).scale(multiplier, multiplier)
+        getContext(SCALED).drawImage(getCanvas(), 0, 0)
+
+        gif.addFrame(getCanvas(SCALED), {
             delay,
             copy: true,
         })

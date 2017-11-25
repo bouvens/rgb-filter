@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Connector, Input } from 'state-control'
 import _ from 'lodash'
 import DragAndDrop from './DropImage'
-import Canvas from './Canvas'
 import { IDS, IMAGES } from '../constants'
 import { PROCESSORS, transparent } from '../utils'
 import { toRGB } from '../image-processing'
@@ -62,6 +61,7 @@ export default class RGBFilter extends Component {
             frames: this.state.frames,
             delay: this.state.delay,
             getBlob: this.setImage,
+            multiplier: this.state.multiplier,
         })
     }
 
@@ -123,14 +123,6 @@ export default class RGBFilter extends Component {
                         ref={(e) => { this.image = e }}
                     />
                 </div>
-                {/*<Canvas*/}
-                    {/*{...this.processImage()}*/}
-                    {/*multiplier={this.state.multiplier}*/}
-                    {/*imageSmoothingEnabled={false}*/}
-                    {/*className={style.canvas}*/}
-                {/*>*/}
-                    {/*{'You are using an outdated browser without support of canvas elements.'}*/}
-                {/*</Canvas>*/}
             </div>
         )
     }
