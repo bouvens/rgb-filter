@@ -10,10 +10,12 @@ export default class DropImage extends Component {
     static propTypes = {
         onDrop: PropTypes.func,
         defaultImage: PropTypes.string,
+        text: PropTypes.string,
     }
     static defaultProps = {
         onDrop: _.noop,
         defaultImage: '',
+        text: 'Drag image on the page',
     }
 
     constructor (props) {
@@ -123,7 +125,7 @@ export default class DropImage extends Component {
         return (
             <div>
                 <div className={style.header}>
-                    Drop image anywhere on the page
+                    {this.props.text}
                 </div>
                 <div className={style.output}>{this.state.output}</div>
                 <BodyPortal>

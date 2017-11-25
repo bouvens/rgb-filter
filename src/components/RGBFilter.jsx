@@ -81,6 +81,7 @@ export default class RGBFilter extends Component {
                 <DragAndDrop
                     onDrop={this.handleDrop}
                     defaultImage={getSrc(this.state.sample)}
+                    text="Drag and drop your image anywhere on the page"
                 />
                 <div className={style.controls}>
                     <Connector
