@@ -1,17 +1,20 @@
 import React, { Component } from 'react'
-import { Connector, Input } from 'state-control'
+import { Connector, Input, SettersBlock } from 'state-control'
+import _ from 'lodash'
 import DragAndDrop from './DropImage'
-import Canvas from './Canvas'
-import { IDS, IMAGES } from '../constants'
+import { IDS, IMAGES, SETTERS } from '../constants'
 import { PROCESSORS, transparent } from '../utils'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
+let cache
+
+const getSrc = (name) => `./images/${name}`
+const throbber = getSrc('triangles.svg')
+
 export default class RGBFilter extends Component {
     static defaultProps = {
-        [IDS.multiplier]: 2,
-        [IDS.limit]: 800,
-        [IDS.noise]: 10,
+        ...SETTERS.Animated,
         [IDS.sample]: IMAGES[0],
     }
 
@@ -27,7 +30,9 @@ export default class RGBFilter extends Component {
         return maxSize / realLimit
     }
 
-    getSrc = (name) => `./images/${name}`
+    setImage = (blob) => {
+        this.image.src = window.URL.createObjectURL(blob)
+    }
 
     handleDrop = (image) => {
         this.setState({ image })
@@ -44,23 +49,38 @@ export default class RGBFilter extends Component {
     }
 
     processImage = () => {
-        const { image } = this.state
+        const { image, noise, frames, delay, multiplier } = this.state
         if (!image) {
-            return {}
+            return
         }
 
-        return toRGB(image, {
+        const newCache = { image: image.src, divider: this.getDivider(), noise, frames, delay, multiplier }
+
+        if (_.isEqual(cache, newCache)) {
+            return
+        }
+
+        this.image.src = throbber
+        cache = newCache
+
+        toRGB(image, {
             divider: this.getDivider(),
             noise: this.state.noise,
+            frames: this.state.frames,
+            delay: this.state.delay,
+            multiplier: this.state.multiplier,
+            getBlob: this.setImage,
         })
     }
 
     render () {
+        this.processImage()
+
         return (
             <div>
                 <DragAndDrop
                     onDrop={this.handleDrop}
-                    defaultImage={this.getSrc(this.state.sample)}
+                    defaultImage={getSrc(this.state.sample)}
                 />
                 <div className={style.controls}>
                     <Connector
@@ -82,6 +102,16 @@ export default class RGBFilter extends Component {
                             label="Color noise:"
                             step={5}
                         />
+                        <Input
+                            id={IDS.frames}
+                            label="Frames:"
+                            step={1}
+                        />
+                        <Input
+                            id={IDS.delay}
+                            label="Delay:"
+                            step={50}
+                        />
                     </Connector>
                 </div>
                 <div className={style.samples}>
@@ -89,20 +119,23 @@ export default class RGBFilter extends Component {
                     {_.map(IMAGES, (image) => (
                         <img
                             key={image}
-                            src={this.getSrc(image)}
+                            src={getSrc(image)}
                             onClick={this.selectImage(image)}
                             alt=""
                         />
                     ))}
+                    <SettersBlock
+                        className={style.setters}
+                        setters={SETTERS}
+                        setHandler={this.handleChange}
+                    />
                 </div>
-                <Canvas
-                    {...this.processImage()}
-                    multiplier={this.state.multiplier}
-                    imageSmoothingEnabled={false}
-                    className={style.canvas}
-                >
-                    {'You are using an outdated browser without support of canvas elements.'}
-                </Canvas>
+                <div className={style.animation}>
+                    <img
+                        ref={(e) => { this.image = e }}
+                        alt=""
+                    />
+                </div>
             </div>
         )
     }

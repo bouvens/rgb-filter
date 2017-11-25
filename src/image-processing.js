@@ -1,27 +1,31 @@
 import _ from 'lodash'
+import GIF from 'gif.js'
 
-let offScreenCanvas
-let offScreenContext
+const SHADOW = 'SHADOW'
+const SCALED = 'SCALED'
 
-function getCanvas () {
-    if (!offScreenCanvas) {
-        offScreenCanvas = document.createElement('canvas')
+const offScreenCanvas = []
+const offScreenContext = []
+
+function getCanvas (id = SHADOW) {
+    if (!offScreenCanvas[id]) {
+        offScreenCanvas[id] = document.createElement('canvas')
     }
 
-    return offScreenCanvas
+    return offScreenCanvas[id]
 }
 
-function getContext () {
-    if (!offScreenContext) {
-        offScreenContext = getCanvas().getContext('2d')
+function getContext (id = SHADOW) {
+    if (!offScreenContext[id]) {
+        offScreenContext[id] = getCanvas(id).getContext('2d')
     }
 
-    return offScreenContext
+    return offScreenContext[id]
 }
 
 const getDeviation = (d) => Math.random() * d
 
-function reduceImage (image, { divider, noise }) {
+function reduceImage (image, { divider, ...options }) {
     const width = image.width / divider
     const height = image.height / divider
 
@@ -30,16 +34,16 @@ function reduceImage (image, { divider, noise }) {
     getContext().drawImage(image, 0, 0, width, height)
 
     if (getCanvas().width < 1 || getCanvas().height < 1) {
-        return { data: [], noise }
+        return {}
     }
 
     return {
         data: getContext().getImageData(0, 0, width, height),
-        noise,
+        options,
     }
 }
 
-function mapToRGB ({ data: { data, width, height }, noise }) {
+function mapToRGB ({ data: { data, width, height }, options }) {
     const mapRGB = []
 
     for (let y = 0; y < height; y += 1) {
@@ -51,13 +55,24 @@ function mapToRGB ({ data: { data, width, height }, noise }) {
         }
     }
 
-    return { mapRGB, noise: (noise / 100) * 255 }
+    return { mapRGB, options }
 }
 
-function makeItRGB ({ mapRGB, noise }) {
+function makeItRGB ({
+    mapRGB,
+    options: {
+        noise: initNoise,
+        frames,
+        multiplier,
+        imageSmoothingEnabled = false,
+        delay,
+        getBlob,
+    },
+}) {
+    const noise = (initNoise / 100) * 255
     const width = mapRGB.length
     if (width === 0) {
-        return {}
+        return
     }
     const height = mapRGB[0].length
     const newWidth = width * 3
@@ -66,37 +81,58 @@ function makeItRGB ({ mapRGB, noise }) {
     getCanvas().width = newWidth
     getCanvas().height = newHeight
 
-    const imageData = getContext().getImageData(0, 0, newWidth, newHeight)
-    const { data } = imageData
+    const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: './utils/gif.worker.js',
+    })
 
-    for (let y = 0; y < height; y += 1) {
-        let newLine = []
+    for (let i = 0; i < frames; i += 1) {
+        const imageData = getContext().getImageData(0, 0, newWidth, newHeight)
+        const { data } = imageData
 
-        for (let x = 0; x < width; x += 1) {
-            let { r, g, b } = mapRGB[x][y]
+        for (let y = 0; y < height; y += 1) {
+            let newLine = []
 
-            r += getDeviation(noise)
-            g += getDeviation(noise)
-            b += getDeviation(noise)
+            for (let x = 0; x < width; x += 1) {
+                let { r, g, b } = mapRGB[x][y]
 
-            const red = [r, 0, 0, 255]
-            const green = [0, g, 0, 255]
-            const blue = [0, 0, b, 255]
-            const allTogether = _.concat(red, green, blue)
+                r += getDeviation(noise)
+                g += getDeviation(noise)
+                b += getDeviation(noise)
 
-            newLine = newLine.concat(allTogether)
+                const red = [r, 0, 0, 255]
+                const green = [0, g, 0, 255]
+                const blue = [0, 0, b, 255]
+                const allTogether = _.concat(red, green, blue)
+
+                newLine = newLine.concat(allTogether)
+            }
+
+            data.set(_.concat(newLine, newLine, newLine), (y * width * 3) * 4 * 3)
         }
 
-        data.set(_.concat(newLine, newLine, newLine), (y * width * 3) * 4 * 3)
+        getContext().putImageData(imageData, 0, 0)
+
+        getCanvas(SCALED).width = getCanvas().width * multiplier
+        getCanvas(SCALED).height = getCanvas().height * multiplier
+
+        getContext(SCALED).imageSmoothingEnabled = imageSmoothingEnabled
+        getContext(SCALED).msImageSmoothingEnabled = imageSmoothingEnabled
+        getContext(SCALED).mozImageSmoothingEnabled = imageSmoothingEnabled
+
+        getContext(SCALED).scale(multiplier, multiplier)
+        getContext(SCALED).drawImage(getCanvas(), 0, 0)
+
+        gif.addFrame(getCanvas(SCALED), {
+            delay,
+            copy: true,
+        })
     }
 
-    getContext().putImageData(imageData, 0, 0)
+    gif.on('finished', getBlob)
 
-    return {
-        width: newWidth,
-        height: newHeight,
-        image: getCanvas(),
-    }
+    gif.render()
 }
 
 export const toRGB = _.flow([reduceImage, mapToRGB, makeItRGB])
