@@ -7,6 +7,8 @@ import { PROCESSORS, transparent } from '../utils'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
 
+let cache
+
 export default class RGBFilter extends Component {
     static defaultProps = {
         [IDS.multiplier]: 2,
@@ -50,10 +52,14 @@ export default class RGBFilter extends Component {
     }
 
     processImage = () => {
-        const { image } = this.state
-        if (!image) {
+        const { image = {}, noise, frames, delay, multiplier } = this.state
+        const newCache = { image: image.src, noise, frames, delay, multiplier }
+
+        if (!image.src || _.isEqual(cache, newCache)) {
             return
         }
+
+        cache = newCache
 
         toRGB(image, {
             divider: this.getDivider(),
@@ -121,6 +127,7 @@ export default class RGBFilter extends Component {
                 <div className={style.animation}>
                     <img
                         ref={(e) => { this.image = e }}
+                        alt=""
                     />
                 </div>
             </div>
