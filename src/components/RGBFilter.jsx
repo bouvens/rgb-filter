@@ -117,6 +117,7 @@ export default class RGBFilter extends Component {
                 <div className={style.samples}>
                     <p>Or select one of samples:</p>
                     {_.map(IMAGES, (image) => (
+                        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions,jsx-a11y/click-events-have-key-events
                         <img
                             key={image}
                             src={getSrc(image)}

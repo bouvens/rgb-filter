@@ -6,6 +6,7 @@
 /reports
 /tests
 /umd
+/public/utils
 
 *.test.js
 *.test.jsx
