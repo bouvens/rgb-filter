@@ -1,10 +1,17 @@
-.canvas {
-    margin: 1.5em 0;
+.setters a {
+    color: lightblue;
+}
+
+.setters > div {
+    display: inline-block;
+    margin-right: 1em;
+    margin-bottom: 1.6em;
 }
 
 .controls {
     float: left;
     margin-right: 10em;
+    margin-bottom: 2em;
 }
 
 .controls label {
@@ -20,5 +27,11 @@
     width: 100px;
     vertical-align: middle;
     margin-right: 2em;
+    margin-bottom: 1em;
     cursor: pointer;
+}
+
+.animation {
+    clear: both;
+    text-align: center;
 }
