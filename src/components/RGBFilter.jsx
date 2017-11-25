@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Connector, Input } from 'state-control'
+import { Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
 import DragAndDrop from './DropImage'
-import { IDS, IMAGES } from '../constants'
+import { IDS, IMAGES, SETTERS } from '../constants'
 import { PROCESSORS, transparent } from '../utils'
 import { toRGB } from '../image-processing'
 import style from './RGBFilter.css'
@@ -14,12 +14,8 @@ const throbber = getSrc('triangles.svg')
 
 export default class RGBFilter extends Component {
     static defaultProps = {
-        [IDS.multiplier]: 2,
-        [IDS.limit]: 400,
-        [IDS.noise]: 10,
+        ...SETTERS.Animated,
         [IDS.sample]: IMAGES[0],
-        [IDS.frames]: 5,
-        [IDS.delay]: 200,
     }
 
     state = {
@@ -128,6 +124,11 @@ export default class RGBFilter extends Component {
                             alt=""
                         />
                     ))}
+                    <SettersBlock
+                        className={style.setters}
+                        setters={SETTERS}
+                        setHandler={this.handleChange}
+                    />
                 </div>
                 <div className={style.animation}>
                     <img
