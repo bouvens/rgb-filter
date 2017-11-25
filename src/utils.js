@@ -1,10 +1,10 @@
 import { IDS } from './constants'
 
 export const PROCESSORS = {
-    [IDS.multiplier]: (value) => Math.max(Math.min(value, 16), 1),
-    [IDS.limit]: (value) => Math.max(Math.min(value, 1000), 1),
-    [IDS.noise]: (value) => Math.max(Math.min(value, 100), 0),
-    [IDS.frames]: (value) => Math.max(Math.min(value, 10), 1),
+    [IDS.multiplier]: (value) => Math.min(Math.max(value, 1), 16),
+    [IDS.limit]: (value) => Math.min(Math.max(value, 1), 1000),
+    [IDS.noise]: (value) => Math.min(Math.max(value, 0), 100),
+    [IDS.frames]: (value) => Math.min(Math.max(value, 1), 10),
 }
 
 export const transparent = (value) => value

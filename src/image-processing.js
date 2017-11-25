@@ -22,7 +22,7 @@ function getContext () {
 
 const getDeviation = (d) => Math.random() * d
 
-function reduceImage (image, { divider, noise, frames, delay, getBlob }) {
+function reduceImage (image, { divider, ...options }) {
     const width = image.width / divider
     const height = image.height / divider
 
@@ -31,17 +31,12 @@ function reduceImage (image, { divider, noise, frames, delay, getBlob }) {
     getContext().drawImage(image, 0, 0, width, height)
 
     if (getCanvas().width < 1 || getCanvas().height < 1) {
-        return { data: [], noise }
+        return {}
     }
 
     return {
         data: getContext().getImageData(0, 0, width, height),
-        options: {
-            noise: (noise / 100) * 255,
-            frames,
-            delay,
-            getBlob,
-        },
+        options,
     }
 }
 
@@ -60,7 +55,8 @@ function mapToRGB ({ data: { data, width, height }, options }) {
     return { mapRGB, options }
 }
 
-function makeItRGB ({ mapRGB, options: { noise, frames, delay, getBlob } }) {
+function makeItRGB ({ mapRGB, options: { noise: initNoise, frames, delay, getBlob } }) {
+    const noise = (initNoise / 100) * 255
     const width = mapRGB.length
     if (width === 0) {
         return
