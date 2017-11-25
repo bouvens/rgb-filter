@@ -25,6 +25,8 @@ function getContext (id = SHADOW) {
 
 const getDeviation = (d) => Math.random() * d
 
+const triple = (c) => _.concat(c, c, c)
+
 function reduceImage (image, { divider, ...options }) {
     const width = image.width / divider
     const height = image.height / divider
@@ -92,7 +94,9 @@ function makeItRGB ({
         const { data } = imageData
 
         for (let y = 0; y < height; y += 1) {
-            let newLine = []
+            let redLine = []
+            let greenLine = []
+            let blueLine = []
 
             for (let x = 0; x < width; x += 1) {
                 let { r, g, b } = mapRGB[x][y]
@@ -104,12 +108,13 @@ function makeItRGB ({
                 const red = [r, 0, 0, 255]
                 const green = [0, g, 0, 255]
                 const blue = [0, 0, b, 255]
-                const allTogether = _.concat(red, green, blue)
 
-                newLine = newLine.concat(allTogether)
+                redLine = redLine.concat(triple(red))
+                greenLine = greenLine.concat(triple(green))
+                blueLine = blueLine.concat(triple(blue))
             }
 
-            data.set(_.concat(newLine, newLine, newLine), (y * width * 3) * 4 * 3)
+            data.set(_.concat(redLine, greenLine, blueLine), (y * width * 3) * 4 * 3)
         }
 
         getContext().putImageData(imageData, 0, 0)
