@@ -3,20 +3,19 @@
 In browser image processing for old fashion stylizing.
 
 ### [Demo](https://bouvens.github.io/rgb-filter/)
-This experiment made with [state-control ![npm][npm-badge]][npm]
 
 [npm-badge]: https://img.shields.io/npm/v/state-control.png?style=flat-square
 [npm]: https://www.npmjs.org/package/state-control
 
 ## What's this?
 
-This Javascript application decomposes every pixel into 3 primitive stripes of clear colors: red, green and blue. Result may be zoomed in.
+This Javascript application decomposes every pixel into 3 primitive stripes of clear colors: red, green and blue. Result may be zoomed in without smoothing.
 
-On this photo you can see usual white on IPS panel on the left side and decomposed by this application white on the right side.
+On the next photo you can find usual white on IPS panel on the left side and decomposed by this application white on the right side.
 
 ![Zoomed IPS panel](https://bouvens.github.io/rgb-filter/images/ips.jpg)
 
-Also there’s animated noise on this colors!
+Also there’s an animated noise on the colors!
 
 ## How to run locally
 
@@ -32,9 +31,11 @@ Also there's a script for local build:
 npm run build
 ```
 
-## Credentials
+## References
 
 * Moon from ~~sky~~ NASA
 * Sunset from [Pixabay](https://pixabay.com/photo-1626515/)
 * Wikipe-tan from Wikipedia
 * Throbber from [there](https://loading.io/spinner/triangles)
+* GIF encoding from [library](https://github.com/jnordberg/gif.js)
+* This experiment made with [state-control ![npm][npm-badge]][npm]
