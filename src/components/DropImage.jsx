@@ -15,7 +15,7 @@ export default class DropImage extends Component {
     static defaultProps = {
         onDrop: _.noop,
         defaultImage: '',
-        text: 'Drag image on the page',
+        text: 'Or drag an image on the page',
     }
 
     constructor (props) {
@@ -87,6 +87,14 @@ export default class DropImage extends Component {
         })
     }
 
+    readAsData = (files) => {
+        try {
+            this.file.readAsDataURL(files[0])
+        } catch (e) {
+            this.onError(e)
+        }
+    }
+
     handleFileSelect = (evt) => {
         this.setState({
             isDragOver: false,
@@ -111,21 +119,20 @@ export default class DropImage extends Component {
                 </li>
             ))
         }
-
-        try {
-            this.file.readAsDataURL(files[0])
-        } catch (e) {
-            this.onError(e)
-        }
-
         this.setState({ output })
+
+        this.readAsData(files)
+    }
+
+    handleFile = ({ target: { files } }) => {
+        this.readAsData(files)
     }
 
     render () {
         return (
             <div>
                 <div className={style.header}>
-                    {this.props.text}
+                    <input type="file" onChange={this.handleFile} />{this.props.text}
                 </div>
                 <div className={style.output}>{this.state.output}</div>
                 <BodyPortal>

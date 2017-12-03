@@ -81,9 +81,14 @@ export default class RGBFilter extends Component {
                 <DragAndDrop
                     onDrop={this.handleDrop}
                     defaultImage={getSrc(this.state.sample)}
-                    text="Drag and drop your image anywhere on the page"
+                    text="Or drag and drop your image anywhere on the page"
                 />
                 <div className={style.controls}>
+                    <SettersBlock
+                        className={style.setters}
+                        setters={SETTERS}
+                        setHandler={this.handleChange}
+                    />
                     <Connector
                         state={this.state}
                         onChange={this.handleChange}
@@ -108,11 +113,12 @@ export default class RGBFilter extends Component {
                             label="Frames:"
                             step={1}
                         />
+                        {this.state.frames > 1 &&
                         <Input
                             id={IDS.delay}
                             label="Delay:"
                             step={50}
-                        />
+                        />}
                     </Connector>
                 </div>
                 <div className={style.samples}>
@@ -126,11 +132,6 @@ export default class RGBFilter extends Component {
                             alt=""
                         />
                     ))}
-                    <SettersBlock
-                        className={style.setters}
-                        setters={SETTERS}
-                        setHandler={this.handleChange}
-                    />
                 </div>
                 <div className={style.animation}>
                     <img
@@ -138,6 +139,7 @@ export default class RGBFilter extends Component {
                         alt=""
                     />
                 </div>
+                <p>Make right click on image and „Save image as...“</p>
             </div>
         )
     }
