@@ -23,8 +23,8 @@ export default class RGBFilter extends Component {
         return maxSize / realLimit
     }
 
-    setImage = (blob) => {
-        this.image.src = window.URL.createObjectURL(blob)
+    setImage = (src) => {
+        this.image.src = src
     }
 
     throbberSrc = getSrc(THROBBER)
@@ -65,10 +65,10 @@ export default class RGBFilter extends Component {
         this.image.src = this.throbberSrc
         cache = newParameters
 
-        toRGB(image, {
-            ..._.omit(newParameters, ['image']),
-            getBlob: this.setImage,
-        })
+        toRGB({
+            ...newParameters,
+            image,
+        }).then(this.setImage)
     }
 
     render () {

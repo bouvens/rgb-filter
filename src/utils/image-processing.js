@@ -27,7 +27,7 @@ const getDeviation = (d) => Math.random() * d
 
 const triple = (c) => _.concat(c, c, c)
 
-function reduceImage (image, { divider, ...options }) {
+function reduceImage ({ image, divider, ...options }) {
     const width = image.width / divider
     const height = image.height / divider
 
@@ -60,7 +60,7 @@ function mapToRGB ({ data: { data, width, height }, options }) {
     return { mapRGB, options }
 }
 
-function makeItRGB ({
+const makeItRGB = ({
     mapRGB,
     options: {
         noise: initNoise,
@@ -68,9 +68,8 @@ function makeItRGB ({
         multiplier,
         imageSmoothingEnabled = false,
         delay,
-        getBlob,
     },
-}) {
+}) => new Promise((resolve) => {
     const noise = (initNoise / 100) * 255
     const width = mapRGB.length
     if (width === 0) {
@@ -135,9 +134,11 @@ function makeItRGB ({
         })
     }
 
-    gif.on('finished', getBlob)
+    gif.on('finished', (blob) => {
+        resolve(window.URL.createObjectURL(blob))
+    })
 
     gif.render()
-}
+})
 
 export const toRGB = _.flow([reduceImage, mapToRGB, makeItRGB])
