@@ -2,24 +2,17 @@ import React, { Component } from 'react'
 import { Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
 import DragAndDrop from './DropImage'
-import { IDS, IMAGES, SETTERS } from '../constants'
-import { PROCESSORS, transparent } from '../utils'
-import { toRGB } from '../image-processing'
+import { IDS, IMAGES, SETTERS, THROBBER } from '../constants'
+import { getSrc, PROCESSORS } from '../utils/utils'
+import { toRGB } from '../utils/image-processing'
 import style from './RGBFilter.css'
 
 let cache
 
-const getSrc = (name) => `./images/${name}`
-const throbber = getSrc('triangles.svg')
-
 export default class RGBFilter extends Component {
-    static defaultProps = {
+    state = {
         ...SETTERS.Animated,
         [IDS.sample]: IMAGES[0],
-    }
-
-    state = {
-        ...this.props,
     }
 
     getDivider = () => {
@@ -34,13 +27,15 @@ export default class RGBFilter extends Component {
         this.image.src = window.URL.createObjectURL(blob)
     }
 
+    throbberSrc = getSrc(THROBBER)
+
     handleDrop = (image) => {
         this.setState({ image })
     }
 
     handleChange = (name, value) => {
         this.setState({
-            [name]: Math.round((PROCESSORS[name] || transparent)(value)),
+            [name]: Math.round((PROCESSORS[name] || ((v) => v))(value)),
         })
     }
 
@@ -54,21 +49,24 @@ export default class RGBFilter extends Component {
             return
         }
 
-        const newCache = { image: image.src, divider: this.getDivider(), noise, frames, delay, multiplier }
+        const newParameters = {
+            image: image.src,
+            divider: this.getDivider(),
+            noise,
+            frames,
+            delay,
+            multiplier,
+        }
 
-        if (_.isEqual(cache, newCache)) {
+        if (_.isEqual(cache, newParameters)) {
             return
         }
 
-        this.image.src = throbber
-        cache = newCache
+        this.image.src = this.throbberSrc
+        cache = newParameters
 
         toRGB(image, {
-            divider: this.getDivider(),
-            noise: this.state.noise,
-            frames: this.state.frames,
-            delay: this.state.delay,
-            multiplier: this.state.multiplier,
+            ..._.omit(newParameters, ['image']),
             getBlob: this.setImage,
         })
     }

@@ -8,6 +8,7 @@ export const IDS = {
     delay: 'delay',
 }
 
+export const THROBBER = 'triangles.svg'
 export const IMAGES = [
     'moon.jpg',
     'sunset.jpg',

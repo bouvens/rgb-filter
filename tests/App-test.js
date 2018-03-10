@@ -2,9 +2,9 @@ import expect from 'expect'
 import React from 'react'
 import {render, unmountComponentAtNode} from 'react-dom'
 
-import App from 'src/components/App'
+import RGBFilter from 'src/components/RGBFilter'
 
-describe('App component', () => {
+describe('RGBFilter component', () => {
   let node
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('App component', () => {
   })
 
   it('displays a welcome message', () => {
-    render(<App/>, node, () => {
+    render(<RGBFilter/>, node, () => {
       expect(node.textContent).toContain('Welcome to React')
     })
   })

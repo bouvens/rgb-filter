@@ -2,6 +2,6 @@ import React from 'react'
 import { render } from 'react-dom'
 
 import './index.css'
-import App from './components/App'
+import RGBFilter from './components/RGBFilter'
 
-render(<App />, document.querySelector('#app'))
+render(<RGBFilter />, document.querySelector('#app'))

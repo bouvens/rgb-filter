@@ -1,4 +1,6 @@
-import { IDS } from './constants'
+import { IDS } from '../constants'
+
+export const getSrc = (name) => `./images/${name}`
 
 export const PROCESSORS = {
     [IDS.multiplier]: (value) => Math.min(Math.max(value, 1), 16),
@@ -6,5 +8,3 @@ export const PROCESSORS = {
     [IDS.noise]: (value) => Math.min(Math.max(value, 0), 100),
     [IDS.frames]: (value) => Math.min(Math.max(value, 1), 10),
 }
-
-export const transparent = (value) => value
