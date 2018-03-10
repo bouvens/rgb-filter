@@ -138,8 +138,8 @@ export default class RGBFilter extends Component {
                         ref={(e) => { this.image = e }}
                         alt=""
                     />
+                    <p>Do right click on image and „Save image as...“</p>
                 </div>
-                <p>Make right click on image and „Save image as...“</p>
             </div>
         )
     }
