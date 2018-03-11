@@ -76,11 +76,11 @@ const makeItRGB = ({
         return
     }
     const height = mapRGB[0].length
-    const newWidth = width * 3
-    const newHeight = height * 3
+    const nextWidth = width * 3
+    const nextHeight = height * 3
 
-    getCanvas().width = newWidth
-    getCanvas().height = newHeight
+    getCanvas().width = nextWidth
+    getCanvas().height = nextHeight
 
     const gif = new GIF({
         workers: 2,
@@ -89,7 +89,7 @@ const makeItRGB = ({
     })
 
     for (let i = 0; i < frames; i += 1) {
-        const imageData = getContext().getImageData(0, 0, newWidth, newHeight)
+        const imageData = getContext().getImageData(0, 0, nextWidth, nextHeight)
         const { data } = imageData
 
         for (let y = 0; y < height; y += 1) {

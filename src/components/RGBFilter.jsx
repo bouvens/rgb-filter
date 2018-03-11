@@ -3,31 +3,43 @@ import { Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
 import DragAndDrop from './DropImage'
 import { IDS, IMAGES, SETTERS, THROBBER } from '../constants'
-import { getSrc, PROCESSORS } from '../utils/utils'
+import { getImageFromSrc, PROCESSORS } from '../utils/utils'
 import { toRGB } from '../utils/image-processing'
 import style from './RGBFilter.css'
 
-let cache
-
 export default class RGBFilter extends Component {
-    state = {
-        ...SETTERS.Animated,
-        [IDS.sample]: IMAGES[0],
+    state = { ...SETTERS.Animated }
+
+    componentDidMount () {
+        this.selectImage(IMAGES[0])()
     }
 
-    getDivider = () => {
-        const { image, limit, multiplier } = this.state
+    shouldComponentUpdate (nextProps, nextState) {
+        return !_.isEqual(
+            this.getParameters(nextState),
+            this.getParameters()
+        )
+    }
+
+    getDivider = ({ image, limit, multiplier } = this.state) => {
         const maxSize = Math.max(image.width, image.height)
         const realLimit = limit / multiplier / 3
 
         return maxSize / realLimit
     }
 
-    setImage = (src) => {
-        this.image.src = src
-    }
-
-    throbberSrc = getSrc(THROBBER)
+    getParameters = ({ image, limit, noise, frames, delay, multiplier } = this.state) => (
+        !image
+            ? { isTheSame: false }
+            : {
+                image: image.src,
+                divider: this.getDivider({ image, limit, multiplier }),
+                noise,
+                frames,
+                delay,
+                multiplier,
+            }
+    )
 
     handleDrop = (image) => {
         this.setState({ image })
@@ -40,45 +52,27 @@ export default class RGBFilter extends Component {
     }
 
     selectImage = (sample) => () => {
-        this.setState({ sample })
-    }
-
-    processImage = () => {
-        const { image, noise, frames, delay, multiplier } = this.state
-        if (!image) {
-            return
-        }
-
-        const newParameters = {
-            image: image.src,
-            divider: this.getDivider(),
-            noise,
-            frames,
-            delay,
-            multiplier,
-        }
-
-        if (_.isEqual(cache, newParameters)) {
-            return
-        }
-
-        this.image.src = this.throbberSrc
-        cache = newParameters
-
-        toRGB({
-            ...newParameters,
-            image,
-        }).then(this.setImage)
+        getImageFromSrc(sample).then((image) => {
+            this.setState({ image })
+        })
     }
 
     render () {
-        this.processImage()
+        const { image } = this.state
+        if (this.image && image) {
+            this.image.src = THROBBER
+            toRGB({
+                ...this.getParameters(),
+                image,
+            }).then((src) => {
+                this.image.src = src
+            })
+        }
 
         return (
             <div>
                 <DragAndDrop
                     onDrop={this.handleDrop}
-                    defaultImage={getSrc(this.state.sample)}
                     text="Or drag and drop your image anywhere on the page"
                 />
                 <div className={style.controls}>
@@ -121,12 +115,12 @@ export default class RGBFilter extends Component {
                 </div>
                 <div className={style.samples}>
                     <p>Or select one of samples:</p>
-                    {_.map(IMAGES, (image) => (
+                    {_.map(IMAGES, (sample) => (
                         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions,jsx-a11y/click-events-have-key-events
                         <img
-                            key={image}
-                            src={getSrc(image)}
-                            onClick={this.selectImage(image)}
+                            key={sample}
+                            src={sample}
+                            onClick={this.selectImage(sample)}
                             alt=""
                         />
                     ))}

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export const IDS = {
     multiplier: 'multiplier',
     limit: 'limit',
@@ -8,12 +10,17 @@ export const IDS = {
     delay: 'delay',
 }
 
-export const THROBBER = 'triangles.svg'
-export const IMAGES = [
+const BASE_THROBBER = 'triangles.svg'
+const BASE_IMAGES = [
     'moon.jpg',
     'sunset.jpg',
     'wikipe-tan.png',
 ]
+
+const makeFullPath = (name) => `./images/${name}`
+
+export const THROBBER = makeFullPath(BASE_THROBBER)
+export const IMAGES = _.map(BASE_IMAGES, makeFullPath)
 
 export const SETTERS = {
     Animated: {

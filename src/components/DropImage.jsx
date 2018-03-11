@@ -9,12 +9,10 @@ const BodyPortal = ({ children }) => createPortal(children, document.body)
 export default class DropImage extends Component {
     static propTypes = {
         onDrop: PropTypes.func,
-        defaultImage: PropTypes.string,
         text: PropTypes.string,
     }
     static defaultProps = {
         onDrop: _.noop,
-        defaultImage: '',
         text: 'Or drag an image on the page',
     }
 
@@ -34,7 +32,6 @@ export default class DropImage extends Component {
         this.img = new Image()
         this.img.onload = this.onImageLoad
         this.img.onerror = this.onError
-        this.img.src = this.props.defaultImage
         this.img.crossOrigin = 'Anonymous'
     }
 
@@ -42,12 +39,6 @@ export default class DropImage extends Component {
         document.addEventListener('dragover', this.handleDragOver)
         document.addEventListener('dragenter', this.handleDragEnter)
         document.addEventListener('drop', this.handleFileSelect)
-    }
-
-    componentWillReceiveProps (nextProps) {
-        if (!_.isEqual(this.props.defaultImage, nextProps.defaultImage)) {
-            this.img.src = nextProps.defaultImage
-        }
     }
 
     onFileLoad = ({ target }) => {
