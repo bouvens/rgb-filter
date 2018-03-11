@@ -2,7 +2,7 @@ import expect from 'expect'
 import React from 'react'
 import {render, unmountComponentAtNode} from 'react-dom'
 
-import RGBFilter from 'src/components/RGBFilter'
+import RGBFilter from 'src/containers/RGBFilter'
 
 describe('RGBFilter component', () => {
   let node

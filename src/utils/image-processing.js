@@ -118,17 +118,21 @@ const makeItRGB = ({
 
         getContext().putImageData(imageData, 0, 0)
 
-        getCanvas(SCALED).width = getCanvas().width * multiplier
-        getCanvas(SCALED).height = getCanvas().height * multiplier
+        const scaledCanvas = getCanvas(SCALED)
 
-        getContext(SCALED).imageSmoothingEnabled = imageSmoothingEnabled
-        getContext(SCALED).msImageSmoothingEnabled = imageSmoothingEnabled
-        getContext(SCALED).mozImageSmoothingEnabled = imageSmoothingEnabled
+        scaledCanvas.width = getCanvas().width * multiplier
+        scaledCanvas.height = getCanvas().height * multiplier
 
-        getContext(SCALED).scale(multiplier, multiplier)
-        getContext(SCALED).drawImage(getCanvas(), 0, 0)
+        const scaledContext = getContext(SCALED)
 
-        gif.addFrame(getCanvas(SCALED), {
+        scaledContext.imageSmoothingEnabled = imageSmoothingEnabled
+        scaledContext.msImageSmoothingEnabled = imageSmoothingEnabled
+        scaledContext.mozImageSmoothingEnabled = imageSmoothingEnabled
+
+        scaledContext.scale(multiplier, multiplier)
+        scaledContext.drawImage(getCanvas(), 0, 0)
+
+        gif.addFrame(scaledCanvas, {
             delay,
             copy: true,
         })
