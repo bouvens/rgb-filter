@@ -1,21 +1,14 @@
 import React, { Component } from 'react'
-import DragAndDrop from '../components/DropImage'
-import { Controls, Samples, Animation } from '../presentational'
+import DragAndDrop from './DropImage'
+import { Controls, Samples, Animation } from './presentational/index'
 import { IMAGES, SETTERS, THROBBER } from '../constants'
-import { getImageFromSrc, PROCESSORS, toRGB } from '../utils'
+import { getImageFromSrc, getDivider, PROCESSORS, toRGB } from '../utils/index'
 
 export default class RGBFilter extends Component {
     state = { ...SETTERS.Animated }
 
     componentDidMount () {
         this.selectImage(IMAGES[0])()
-    }
-
-    getDivider = ({ image, limit, multiplier } = this.state) => {
-        const maxSize = Math.max(image.width, image.height)
-        const realLimit = limit / multiplier / 3
-
-        return maxSize / realLimit
     }
 
     setImageRef = (e) => {
@@ -43,7 +36,7 @@ export default class RGBFilter extends Component {
         if (this.image && image) {
             this.image.src = THROBBER
             toRGB({
-                divider: this.getDivider({ image, limit, multiplier }),
+                divider: getDivider({ image, limit, multiplier }),
                 noise,
                 frames,
                 delay,

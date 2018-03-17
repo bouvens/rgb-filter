@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-import { IMAGES } from '../constants'
+import { IMAGES } from '../../constants'
 import style from './style.css'
 
 const Samples = ({ selectImage }) => (

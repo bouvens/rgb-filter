@@ -1,2 +1,10 @@
 export { toRGB } from './image-processing'
-export { getImageFromSrc, PROCESSORS } from './utils'
+export {
+    getImageFromSrc,
+    getDivider,
+    PROCESSORS,
+    getDeviation,
+    triple,
+    getCanvas,
+    getContext,
+} from './utils'

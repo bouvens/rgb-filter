@@ -1,31 +1,8 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
+import { getDeviation, triple, getCanvas, getContext } from './utils'
 
-const SHADOW = 'SHADOW'
 const SCALED = 'SCALED'
-
-const offScreenCanvas = []
-const offScreenContext = []
-
-function getCanvas (id = SHADOW) {
-    if (!offScreenCanvas[id]) {
-        offScreenCanvas[id] = document.createElement('canvas')
-    }
-
-    return offScreenCanvas[id]
-}
-
-function getContext (id = SHADOW) {
-    if (!offScreenContext[id]) {
-        offScreenContext[id] = getCanvas(id).getContext('2d')
-    }
-
-    return offScreenContext[id]
-}
-
-const getDeviation = (d) => Math.random() * d
-
-const triple = (c) => _.concat(c, c, c)
 
 function reduceImage ({ image, divider, ...options }) {
     const width = image.width / divider
@@ -63,14 +40,13 @@ function mapToRGB ({ data: { data, width, height }, options }) {
 const makeItRGB = ({
     mapRGB,
     options: {
-        noise: initNoise,
+        noise,
         frames,
         multiplier,
         imageSmoothingEnabled = false,
         delay,
     },
 }) => new Promise((resolve) => {
-    const noise = (initNoise / 100) * 255
     const width = mapRGB.length
     if (width === 0) {
         return

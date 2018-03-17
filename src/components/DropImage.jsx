@@ -19,12 +19,6 @@ export default class DropImage extends Component {
     constructor (props) {
         super(props)
 
-        this.state = {
-            output: '',
-            isDragOver: false,
-            isFileLoading: false,
-        }
-
         this.file = new FileReader()
         this.file.onload = this.onFileLoad
         this.file.onerror = this.onError
@@ -33,6 +27,12 @@ export default class DropImage extends Component {
         this.img.onload = this.onImageLoad
         this.img.onerror = this.onError
         this.img.crossOrigin = 'Anonymous'
+    }
+
+    state = {
+        output: '',
+        isDragOver: false,
+        isFileLoading: false,
     }
 
     componentDidMount () {
@@ -53,9 +53,7 @@ export default class DropImage extends Component {
     }
 
     onImageLoad = ({ target }) => {
-        this.setState({
-            isFileLoading: false,
-        })
+        this.setState({ isFileLoading: false })
         this.props.onDrop(target)
     }
 
@@ -67,15 +65,11 @@ export default class DropImage extends Component {
     }
 
     handleDragEnter = () => {
-        this.setState({
-            isDragOver: true,
-        })
+        this.setState({ isDragOver: true })
     }
 
     handleDragLeave = () => {
-        this.setState({
-            isDragOver: false,
-        })
+        this.setState({ isDragOver: false })
     }
 
     readAsData = (files) => {
