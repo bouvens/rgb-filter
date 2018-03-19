@@ -37,7 +37,33 @@ function mapToRGB ({ data: { data, width, height }, options }) {
     return { mapRGB, options }
 }
 
-const makeItRGB = ({
+const makeSetFrame = (mapRGB, width, height, noise) => ({ data }) => {
+    for (let y = 0; y < height; y += 1) {
+        let redLine = []
+        let greenLine = []
+        let blueLine = []
+
+        for (let x = 0; x < width; x += 1) {
+            let { r, g, b } = mapRGB[x][y]
+
+            r += getDeviation(noise)
+            g += getDeviation(noise)
+            b += getDeviation(noise)
+
+            const red = [r, 0, 0, 255]
+            const green = [0, g, 0, 255]
+            const blue = [0, 0, b, 255]
+
+            redLine = redLine.concat(triple(red))
+            greenLine = greenLine.concat(triple(green))
+            blueLine = blueLine.concat(triple(blue))
+        }
+
+        data.set(_.concat(redLine, greenLine, blueLine), (y * width * 3) * 4 * 3)
+    }
+}
+
+const filterImageLikeAnOldTV = ({
     mapRGB,
     options: {
         noise,
@@ -58,6 +84,8 @@ const makeItRGB = ({
     getCanvas().width = nextWidth
     getCanvas().height = nextHeight
 
+    const setFrame = makeSetFrame(mapRGB, width, height, noise)
+
     const gif = new GIF({
         workers: 2,
         quality: 10,
@@ -66,31 +94,8 @@ const makeItRGB = ({
 
     for (let i = 0; i < frames; i += 1) {
         const imageData = getContext().getImageData(0, 0, nextWidth, nextHeight)
-        const { data } = imageData
 
-        for (let y = 0; y < height; y += 1) {
-            let redLine = []
-            let greenLine = []
-            let blueLine = []
-
-            for (let x = 0; x < width; x += 1) {
-                let { r, g, b } = mapRGB[x][y]
-
-                r += getDeviation(noise)
-                g += getDeviation(noise)
-                b += getDeviation(noise)
-
-                const red = [r, 0, 0, 255]
-                const green = [0, g, 0, 255]
-                const blue = [0, 0, b, 255]
-
-                redLine = redLine.concat(triple(red))
-                greenLine = greenLine.concat(triple(green))
-                blueLine = blueLine.concat(triple(blue))
-            }
-
-            data.set(_.concat(redLine, greenLine, blueLine), (y * width * 3) * 4 * 3)
-        }
+        setFrame(imageData)
 
         getContext().putImageData(imageData, 0, 0)
 
@@ -121,4 +126,4 @@ const makeItRGB = ({
     gif.render()
 })
 
-export const toRGB = _.flow([reduceImage, mapToRGB, makeItRGB])
+export const toRGB = _.flow([reduceImage, mapToRGB, filterImageLikeAnOldTV])
