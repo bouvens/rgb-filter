@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { IDS } from '../constants'
 
 export const getImageFromSrc = (src) => new Promise((resolve) => {
