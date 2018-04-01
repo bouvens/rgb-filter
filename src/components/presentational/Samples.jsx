@@ -7,7 +7,7 @@ import style from './style.css'
 const Samples = ({ selectImage }) => (
     <div className={style.samples}>
         <p>Or select one of samples:</p>
-        {_.map(IMAGES, (sample) => (
+        {IMAGES.map((sample) => (
             // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions,jsx-a11y/click-events-have-key-events
             <img
                 key={sample}

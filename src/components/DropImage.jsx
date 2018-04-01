@@ -98,7 +98,7 @@ export default class DropImage extends Component {
             output = ''
             this.img.src = link
         } else {
-            output = _.map(files, (f) => (
+            output = files.map((f) => (
                 <li key={f.name}>
                     {`${f.name} (${f.type || 'n/a'}) - ${f.size} bytes`}
                 </li>

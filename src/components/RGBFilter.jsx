@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import DragAndDrop from './DropImage'
-import { Controls, Samples, Animation } from './presentational/index'
+import { Controls, Samples, Animation } from './presentational'
 import { IMAGES, SETTERS, THROBBER } from '../constants'
-import { getImageFromSrc, getDivider, PROCESSORS, toRGB } from '../utils/index'
+import { getImageFromSrc, getDivider, PROCESSORS, toRGB } from '../utils'
 
 export default class RGBFilter extends Component {
     state = { ...SETTERS.Animated }

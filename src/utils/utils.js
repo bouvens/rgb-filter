@@ -26,7 +26,7 @@ export const PROCESSORS = {
 
 export const getDeviation = (noise) => Math.random() * (noise / 100) * 255
 
-export const triple = (c) => _.concat(c, c, c)
+export const triple = (c) => c.concat(c, c)
 
 // singletons for canvas and context
 

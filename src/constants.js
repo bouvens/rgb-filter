@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 export const IDS = {
     multiplier: 'multiplier',
     limit: 'limit',
@@ -20,7 +18,7 @@ const BASE_IMAGES = [
 const makeFullPath = (name) => `./images/${name}`
 
 export const THROBBER = makeFullPath(BASE_THROBBER)
-export const IMAGES = _.map(BASE_IMAGES, makeFullPath)
+export const IMAGES = BASE_IMAGES.map(makeFullPath)
 
 export const SETTERS = {
     Animated: {
