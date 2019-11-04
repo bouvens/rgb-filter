@@ -72,9 +72,9 @@ export default class DropImage extends Component {
         this.setState({ isDragOver: false })
     }
 
-    readAsData = (files) => {
+    readAsData = (file) => {
         try {
-            this.file.readAsDataURL(files[0])
+            this.file.readAsDataURL(file)
         } catch (e) {
             this.onError(e)
         }
@@ -90,6 +90,7 @@ export default class DropImage extends Component {
         evt.preventDefault()
 
         const { files } = evt.dataTransfer
+        const file = files.item(0)
         const link = evt.dataTransfer.getData('text')
 
         let output
@@ -98,15 +99,15 @@ export default class DropImage extends Component {
             output = ''
             this.img.src = link
         } else {
-            output = files.map((f) => (
-                <li key={f.name}>
-                    {`${f.name} (${f.type || 'n/a'}) - ${f.size} bytes`}
+            output = (
+                <li key={file.name}>
+                    {`${file.name} (${file.type || 'n/a'}) - ${file.size} bytes`}
                 </li>
-            ))
+            )
         }
         this.setState({ output })
 
-        this.readAsData(files)
+        this.readAsData(file)
     }
 
     handleFile = ({ target: { files } }) => {
