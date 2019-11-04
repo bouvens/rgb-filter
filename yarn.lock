@@ -3212,6 +3212,11 @@ escodegen@1.x.x:
   optionalDependencies:
     source-map "~0.6.1"
 
+eslint-config-air@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-air/-/eslint-config-air-0.1.0.tgz#86c84a07a0744134ed3558d865d4418bf2a3275f"
+  integrity sha512-JQpVmpa8Wj+hNj7rZxXddqQzwE84Z8N58efscCDs/Zjau2vsXTEuPeiGXKFszooIqWI1NI4tUKvZFs0PG6AWVA==
+
 eslint-config-airbnb-base@^14.0.0:
   version "14.0.0"
   resolved "https://registry.yarnpkg.com/eslint-config-airbnb-base/-/eslint-config-airbnb-base-14.0.0.tgz#8a7bcb9643d13c55df4dd7444f138bf4efa61e17"

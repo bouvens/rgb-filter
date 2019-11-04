@@ -8,6 +8,9 @@
     "clean": "nwb clean-app",
     "start": "nwb serve-react-app",
     "deploy": "nwb build-react-app && gh-pages -d dist",
+    "eslint": "eslint --ext .js,.jsx -f checkstyle -o ./reports/js.checkstyle.xml ./src",
+    "eslint:html": "eslint --ext .js,.jsx -f html -o ./reports/eslint.checkstyle.html ./src",
+    "eslint:fix": "eslint --fix --ext .js,.jsx  ./src",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
@@ -23,6 +26,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.3",
     "eslint": "^6.6.0",
+    "eslint-config-air": "^0.1.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-import-resolver-webpack": "^0.11.1",
     "eslint-plugin-import": "^2.8.0",
