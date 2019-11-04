@@ -1,23 +1,25 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
-import { getDeviation, triple, getCanvas, getContext } from './utils'
+import { getCanvas, getContext, getDeviation, triple } from './utils'
 
 const SCALED = 'SCALED'
 
 function reduceImage ({ image, divider, ...options }) {
+    const canvas = getCanvas()
+    const context = getContext()
     const width = image.width / divider
     const height = image.height / divider
 
-    getCanvas().width = width
-    getCanvas().height = height
-    getContext().drawImage(image, 0, 0, width, height)
+    canvas.width = width
+    canvas.height = height
+    context.drawImage(image, 0, 0, width, height)
 
     if (getCanvas().width < 1 || getCanvas().height < 1) {
         return {}
     }
 
     return {
-        data: getContext().getImageData(0, 0, width, height),
+        data: context.getImageData(0, 0, width, height),
         options,
     }
 }
@@ -25,8 +27,8 @@ function reduceImage ({ image, divider, ...options }) {
 function mapToRGB ({ data: { data, width, height }, options }) {
     const mapRGB = []
 
-    for (let y = 0; y < height; y += 1) {
-        for (let x = 0; x < width; x += 1) {
+    for (let x = 0; x < width; x += 1) {
+        for (let y = 0; y < height; y += 1) {
             const index = ((y * width) + x) * 4
             const [r, g, b] = data.slice(index, index + 3)
 
@@ -74,6 +76,8 @@ const filterImageLikeAnOldTV = ({
     },
 }) => new Promise((resolve) => {
     const width = mapRGB.length
+    const canvas = getCanvas()
+    const context = getContext()
     if (width === 0) {
         return
     }
@@ -81,8 +85,8 @@ const filterImageLikeAnOldTV = ({
     const nextWidth = width * 3
     const nextHeight = height * 3
 
-    getCanvas().width = nextWidth
-    getCanvas().height = nextHeight
+    canvas.width = nextWidth
+    canvas.height = nextHeight
 
     const setFrame = makeSetFrame(mapRGB, width, height, noise)
 
@@ -93,25 +97,24 @@ const filterImageLikeAnOldTV = ({
     })
 
     for (let i = 0; i < frames; i += 1) {
-        const imageData = getContext().getImageData(0, 0, nextWidth, nextHeight)
+        const imageData = context.getImageData(0, 0, nextWidth, nextHeight)
 
         setFrame(imageData)
 
-        getContext().putImageData(imageData, 0, 0)
+        context.putImageData(imageData, 0, 0)
 
         const scaledCanvas = getCanvas(SCALED)
 
-        scaledCanvas.width = getCanvas().width * multiplier
-        scaledCanvas.height = getCanvas().height * multiplier
+        scaledCanvas.width = canvas.width * multiplier
+        scaledCanvas.height = canvas.height * multiplier
 
         const scaledContext = getContext(SCALED)
 
         scaledContext.imageSmoothingEnabled = imageSmoothingEnabled
         scaledContext.msImageSmoothingEnabled = imageSmoothingEnabled
-        scaledContext.mozImageSmoothingEnabled = imageSmoothingEnabled
 
         scaledContext.scale(multiplier, multiplier)
-        scaledContext.drawImage(getCanvas(), 0, 0)
+        scaledContext.drawImage(canvas, 0, 0)
 
         gif.addFrame(scaledCanvas, {
             delay,
