@@ -111,7 +111,7 @@ export default class DropImage extends Component {
     }
 
     handleFile = ({ target: { files } }) => {
-        this.readAsData(files)
+        this.readAsData(files.item(0))
     }
 
     render () {
