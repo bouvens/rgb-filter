@@ -5,7 +5,7 @@ import { IMAGES, SETTERS, THROBBER } from '../constants'
 import { getImageFromSrc, getDivider, PROCESSORS, toRGB } from '../utils'
 
 export default class RGBFilter extends Component {
-    state = { ...SETTERS.Animated }
+    state = { ...SETTERS[Object.keys(SETTERS)[0]] }
 
     componentDidMount () {
         this.selectImage(IMAGES[0])()
