@@ -53,7 +53,7 @@ export default class DropImage extends Component {
     }
 
     onImageLoad = ({ target }) => {
-        this.setState({ isFileLoading: false })
+        this.setState({ isFileLoading: false, output: '' })
         this.props.onDrop(target)
     }
 
