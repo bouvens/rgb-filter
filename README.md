@@ -34,7 +34,7 @@ yarn run build
 
 ## References
 
-* Moon from ~~sky~~ NASA
+* The Moon from ~~sky~~ NASA
 * Sunset from [Pixabay](https://pixabay.com/photo-1626515/)
 * Wikipe-tan from Wikipedia
 * Throbber from [there](https://loading.io/spinner/triangles)
