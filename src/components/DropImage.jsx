@@ -7,6 +7,16 @@ import style from './DropImage.css'
 const BodyPortal = ({ children }) => createPortal(children, document.body)
 
 export default class DropImage extends Component {
+  static propTypes = {
+    onDrop: PropTypes.func,
+    text: PropTypes.string,
+  }
+
+  static defaultProps = {
+    onDrop: _.noop,
+    text: 'Or drag an image on the page',
+  }
+
   state = {
     output: '',
     isDragOver: false,
@@ -130,14 +140,4 @@ export default class DropImage extends Component {
       </div>
     )
   }
-}
-
-DropImage.propTypes = {
-  onDrop: PropTypes.func,
-  text: PropTypes.string,
-}
-
-DropImage.defaultProps = {
-  onDrop: _.noop,
-  text: 'Or drag an image on the page',
 }
