@@ -43,7 +43,10 @@ module.exports = {
   plugins: [
     ...isProduction ? [new CleanWebpackPlugin()] : [],
     new CopyWebpackPlugin([{ from: 'public', to: '' }]),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html',
+      favicon: 'src/favicon.ico',
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
