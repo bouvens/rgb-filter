@@ -4,7 +4,7 @@
   "description": "rgb-filter",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development --hot",
+    "start": "webpack-dev-server --mode development --hot --host 0.0.0.0",
     "build": "webpack --mode production",
     "deploy": "yarn build && gh-pages -d dist",
     "eslint": "eslint --ext .js,.jsx -f checkstyle -o ./reports/js.checkstyle.xml ./src",
