@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.jsx',
   output: {
     path: path.join(__dirname, '/dist'),
     publicPath: '',
