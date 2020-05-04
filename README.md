@@ -24,10 +24,10 @@ Run in bash:
 git clone git@github.com:bouvens/rgb-filter.git
 cd rgb-filter
 yarn
-yarn run start
+yarn start
 ```
 
-Also there's a script for local build:
+Also there's a script for local build in the dist directory:
 ```Shell
 yarn run build
 ```
