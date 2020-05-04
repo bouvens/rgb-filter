@@ -22,11 +22,11 @@ export default class RGBFilter extends Component {
   }
 
   componentDidUpdate () {
-    const { image, limit, noise, frames, delay, multiplier } = this.state
+    const { image, sizeLimit, noise, frames, delay, multiplier } = this.state
     if (this.image && image) {
       this.image.src = THROBBER
       toRGB({
-        divider: getDivider({ image, limit, multiplier }),
+        divider: getDivider({ image, sizeLimit, multiplier }),
         noise,
         frames,
         delay,

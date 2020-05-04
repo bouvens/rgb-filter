@@ -4,7 +4,6 @@ export {
   getDivider,
   PARAMETER_PROCESSORS,
   getDeviation,
-  triple,
 } from './utils'
 export { getCanvas, getContext } from './singletons'
 export { IDS, SETTERS, THROBBER, SAMPLE_IMAGE_PATHS } from './constants'

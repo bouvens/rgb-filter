@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
-import { getDeviation, triple } from './utils'
+import { getDeviation } from './utils'
 
 const SCALED = 'SCALED'
 
@@ -42,10 +42,6 @@ function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
 
 const makeSetFrame = (mapRGB, width, height, noise) => ({ data }) => {
   for (let y = 0; y < height; y += 1) {
-    let redLine = []
-    let greenLine = []
-    let blueLine = []
-
     for (let x = 0; x < width; x += 1) {
       let { r, g, b } = mapRGB[x][y]
 
@@ -53,16 +49,8 @@ const makeSetFrame = (mapRGB, width, height, noise) => ({ data }) => {
       g += getDeviation(noise)
       b += getDeviation(noise)
 
-      const red = [r, 0, 0, 255]
-      const green = [0, g, 0, 255]
-      const blue = [0, 0, b, 255]
-
-      redLine = redLine.concat(triple(red))
-      greenLine = greenLine.concat(triple(green))
-      blueLine = blueLine.concat(triple(blue))
+      data.set([r, g, b, 255], ((y * width) + x) * 4)
     }
-
-    data.set(redLine.concat(greenLine, blueLine), (y * width * 3) * 4 * 3)
   }
 }
 
@@ -87,11 +75,6 @@ const filterImageLikeAnOldTV = ({
     return
   }
   const height = mapRGB[0].length
-  const nextWidth = width * 3
-  const nextHeight = height * 3
-
-  canvas.width = nextWidth
-  canvas.height = nextHeight
 
   const setFrame = makeSetFrame(mapRGB, width, height, noise)
 
@@ -102,7 +85,7 @@ const filterImageLikeAnOldTV = ({
   })
 
   for (let i = 0; i < frames; i += 1) {
-    const imageData = context.getImageData(0, 0, nextWidth, nextHeight)
+    const imageData = context.getImageData(0, 0, width, height)
 
     setFrame(imageData)
 

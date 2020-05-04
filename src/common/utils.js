@@ -9,20 +9,18 @@ export const getImageFromSrc = (src) => new Promise((resolve) => {
   image.src = src
 })
 
-export function getDivider ({ image, limit, multiplier }) {
+export function getDivider ({ image, sizeLimit, multiplier }) {
   const maxSize = Math.max(image.width, image.height)
-  const realLimit = limit / multiplier / 3
+  const realLimit = sizeLimit / multiplier
 
   return maxSize / realLimit
 }
 
 export const PARAMETER_PROCESSORS = {
   [IDS.multiplier]: (value) => Math.min(Math.max(value, 1), 16),
-  [IDS.limit]: (value) => Math.min(Math.max(value, 1), 1000),
+  [IDS.sizeLimit]: (value) => Math.min(Math.max(value, 1), 1000),
   [IDS.noise]: (value) => Math.min(Math.max(value, 0), 100),
   [IDS.frames]: (value) => Math.min(Math.max(value, 1), 10),
 }
 
 export const getDeviation = (noise) => Math.random() * (noise / 100) * 255
-
-export const triple = (c) => c.concat(c, c)

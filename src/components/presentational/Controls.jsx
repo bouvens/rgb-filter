@@ -19,17 +19,17 @@ const Controls = ({ state, handleChange }) => (
     >
       <Input
         id={IDS.multiplier}
-        label="Zoom:"
+        label="Multiplier:"
       />
       <Input
-        id={IDS.limit}
-        label="Size:"
-        step={100}
+        id={IDS.sizeLimit}
+        label="Size limit:"
+        step={200}
       />
       <Input
         id={IDS.noise}
         label="Color noise:"
-        step={10}
+        step={1}
       />
       <Input
         id={IDS.frames}
@@ -41,7 +41,7 @@ const Controls = ({ state, handleChange }) => (
         <Input
           id={IDS.delay}
           label="Delay:"
-          step={50}
+          step={100}
         />
       )}
     </Connector>
