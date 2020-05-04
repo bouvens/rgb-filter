@@ -1,14 +1,21 @@
 import React, { Component } from 'react'
+import {
+  getDivider,
+  getImageFromSrc,
+  PARAMETER_PROCESSORS,
+  SAMPLE_IMAGE_PATHS,
+  SETTERS,
+  THROBBER,
+  toRGB,
+} from '../common'
 import DragAndDrop from './DropImage'
 import { Animation, Controls, Samples } from './presentational'
-import { IMAGES, SETTERS, THROBBER } from '../constants'
-import { getDivider, getImageFromSrc, PROCESSORS, toRGB } from '../utils'
 
 export default class RGBFilter extends Component {
   state = { ...SETTERS[Object.keys(SETTERS)[0]] }
 
   componentDidMount () {
-    this.selectImage(IMAGES[0])()
+    this.handleSelectImage(SAMPLE_IMAGE_PATHS[0])()
   }
 
   setImageRef = (e) => {
@@ -21,11 +28,11 @@ export default class RGBFilter extends Component {
 
   handleChange = (name, value) => {
     this.setState({
-      [name]: Math.round((PROCESSORS[name] || ((v) => v))(value)),
+      [name]: Math.round((PARAMETER_PROCESSORS[name] || ((v) => v))(value)),
     })
   }
 
-  selectImage = (sample) => () => {
+  handleSelectImage = (sample) => () => {
     getImageFromSrc(sample).then((image) => {
       this.setState({ image })
     })
@@ -57,7 +64,7 @@ export default class RGBFilter extends Component {
           state={this.state}
           handleChange={this.handleChange}
         />
-        <Samples selectImage={this.selectImage} />
+        <Samples selectImage={this.handleSelectImage} />
         <Animation setImageRef={this.setImageRef} />
       </div>
     )

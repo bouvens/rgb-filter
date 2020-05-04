@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
-import { getCanvas, getContext, getDeviation, triple } from './utils'
+import { getCanvas, getContext } from './singletons'
+import { getDeviation, triple } from './utils'
 
 const SCALED = 'SCALED'
 

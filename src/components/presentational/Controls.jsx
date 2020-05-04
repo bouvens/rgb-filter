@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
-import { IDS, SETTERS } from '../../constants'
+import { IDS, SETTERS } from '../../common'
 import style from './style.css'
 
 const Controls = ({ state, handleChange }) => (
@@ -37,13 +37,13 @@ const Controls = ({ state, handleChange }) => (
         step={1}
       />
       {state.frames > 1
-            && (
-            <Input
-              id={IDS.delay}
-              label="Delay:"
-              step={50}
-            />
-            )}
+      && (
+        <Input
+          id={IDS.delay}
+          label="Delay:"
+          step={50}
+        />
+      )}
     </Connector>
   </div>
 )

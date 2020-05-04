@@ -9,7 +9,7 @@ export const IDS = {
 }
 
 const BASE_THROBBER = 'triangles.svg'
-const BASE_IMAGES = [
+const SAMPLE_IMAGES_NAMES = [
   'moon.jpg',
   'sunset.jpg',
   'wikipe-tan.png',
@@ -18,7 +18,7 @@ const BASE_IMAGES = [
 const makeFullPath = (name) => `./images/${name}`
 
 export const THROBBER = makeFullPath(BASE_THROBBER)
-export const IMAGES = BASE_IMAGES.map(makeFullPath)
+export const SAMPLE_IMAGE_PATHS = SAMPLE_IMAGES_NAMES.map(makeFullPath)
 
 export const SETTERS = {
   Animated: {
