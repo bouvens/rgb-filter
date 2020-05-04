@@ -14,6 +14,7 @@ module.exports = {
     filename: '[name].bundle.js',
     globalObject: 'this',
   },
+  devtool: isProduction ? undefined : 'eval-source-map',
   module: {
     rules: [
       {
