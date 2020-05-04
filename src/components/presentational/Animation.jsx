@@ -9,7 +9,7 @@ const Animation = ({ setImageRef }) => (
       ref={setImageRef}
       alt="Generated animation"
     />
-    <p>Do right click on image and “Save image as...”</p>
+    <p>Do right click on the image and select “Save image as...”</p>
   </div>
 )
 
