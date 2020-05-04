@@ -16,7 +16,7 @@ function reduceImage ({ image, divider, ...options }) {
   context.drawImage(image, 0, 0, width, height)
 
   if (getCanvas().width < 1 || getCanvas().height < 1) {
-    return {}
+    return { error: 'Check parameters and image' }
   }
 
   return {
@@ -25,7 +25,7 @@ function reduceImage ({ image, divider, ...options }) {
   }
 }
 
-function mapToRGB ({ data: { data, width, height }, options }) {
+function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
   const mapRGB = []
 
   for (let x = 0; x < width; x += 1) {
@@ -37,7 +37,7 @@ function mapToRGB ({ data: { data, width, height }, options }) {
     }
   }
 
-  return { mapRGB, options }
+  return { mapRGB, options, error }
 }
 
 const makeSetFrame = (mapRGB, width, height, noise) => ({ data }) => {
@@ -74,8 +74,12 @@ const filterImageLikeAnOldTV = ({
     multiplier,
     imageSmoothingEnabled = false,
     delay,
-  },
-}) => new Promise((resolve) => {
+  } = {},
+  error,
+}) => new Promise((resolve, reject) => {
+  if (error) {
+    reject(new Error(error))
+  }
   const width = mapRGB.length
   const canvas = getCanvas()
   const context = getContext()

@@ -12,10 +12,37 @@ import DragAndDrop from './DropImage'
 import { Animation, Controls, Samples } from './presentational'
 
 export default class RGBFilter extends Component {
-  state = { ...SETTERS[Object.keys(SETTERS)[0]] }
+  state = {
+    ...SETTERS[Object.keys(SETTERS)[0]],
+    error: null,
+  }
 
   componentDidMount () {
     this.handleSelectImage(SAMPLE_IMAGE_PATHS[0])()
+  }
+
+  componentDidUpdate () {
+    const { image, limit, noise, frames, delay, multiplier } = this.state
+    if (this.image && image) {
+      this.image.src = THROBBER
+      toRGB({
+        divider: getDivider({ image, limit, multiplier }),
+        noise,
+        frames,
+        delay,
+        multiplier,
+        image,
+      }).then((src) => {
+        this.image.src = src
+        if (this.state.error) {
+          this.setState({ error: null })
+        }
+      }).catch((error) => {
+        if (!this.state.error) {
+          this.setState({ error: error.toString() })
+        }
+      })
+    }
   }
 
   setImageRef = (e) => {
@@ -39,21 +66,6 @@ export default class RGBFilter extends Component {
   }
 
   render () {
-    const { image, limit, noise, frames, delay, multiplier } = this.state
-    if (this.image && image) {
-      this.image.src = THROBBER
-      toRGB({
-        divider: getDivider({ image, limit, multiplier }),
-        noise,
-        frames,
-        delay,
-        multiplier,
-        image,
-      }).then((src) => {
-        this.image.src = src
-      })
-    }
-
     return (
       <div>
         <DragAndDrop
@@ -65,6 +77,7 @@ export default class RGBFilter extends Component {
           handleChange={this.handleChange}
         />
         <Samples selectImage={this.handleSelectImage} />
+        {this.state.error}
         <Animation setImageRef={this.setImageRef} />
       </div>
     )
