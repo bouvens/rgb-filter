@@ -13,7 +13,7 @@ This Javascript application decomposes every pixel into 3 primitive stripes of c
 
 On the next photo you can find usual white on IPS panel on the left side and decomposed by this application white on the right side.
 
-![Zoomed IPS panel](https://bouvens.github.io/rgb-filter/images/ips.jpg)
+![Zoomed IPS panel](https://raw.githubusercontent.com/bouvens/rgb-filter/master/images/ips.jpg)
 
 Also there’s an animated noise on the colors!
 
