@@ -19,7 +19,7 @@ const Controls = ({ state, handleChange }) => (
     >
       <Input
         id={IDS.multiplier}
-        label="Zoom in result:"
+        label="Zoom:"
       />
       <Input
         id={IDS.limit}
@@ -29,7 +29,7 @@ const Controls = ({ state, handleChange }) => (
       <Input
         id={IDS.noise}
         label="Color noise:"
-        step={5}
+        step={10}
       />
       <Input
         id={IDS.frames}

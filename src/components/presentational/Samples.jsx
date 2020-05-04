@@ -14,7 +14,7 @@ const Samples = ({ selectImage }) => (
         key={sample}
         src={sample}
         onClick={selectImage(sample)}
-        alt=""
+        alt="Sample"
       />
     ))}
   </div>
