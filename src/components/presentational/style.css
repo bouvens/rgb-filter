@@ -15,6 +15,7 @@
 @media screen and (min-width: 768px) {
     .controls {
         float: left;
+        max-width: 40%;
         margin-right: 10em;
     }
 }
