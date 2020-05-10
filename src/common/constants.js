@@ -1,4 +1,5 @@
 export const IDS = {
+  eightBit: 'eightBit',
   multiplier: 'multiplier',
   sizeLimit: 'sizeLimit',
   noise: 'noise',

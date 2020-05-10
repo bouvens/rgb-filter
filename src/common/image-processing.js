@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
-import { getDeviation } from './utils'
+import { getDeviation, snapTo } from './utils'
 
 const SCALED = 'SCALED'
 
@@ -40,14 +40,22 @@ function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
   return { mapRGB, options, error }
 }
 
-const makeSetFrame = (mapRGB, width, height, noise) => ({ data }) => {
+const makeSetFrame = (mapRGB, width, height, noise, eightBit) => ({ data }) => {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       let { r, g, b } = mapRGB[x][y]
 
-      r += getDeviation(noise)
-      g += getDeviation(noise)
-      b += getDeviation(noise)
+      if (noise) {
+        r += getDeviation(noise)
+        g += getDeviation(noise)
+        b += getDeviation(noise)
+      }
+
+      if (eightBit) {
+        r = snapTo(8, r)
+        g = snapTo(8, g)
+        b = snapTo(4, b)
+      }
 
       data.set([r, g, b, 255], ((y * width) + x) * 4)
     }
@@ -62,6 +70,7 @@ const filterImageLikeAnOldTV = ({
     multiplier,
     imageSmoothingEnabled = false,
     delay,
+    eightBit,
   } = {},
   error,
 }) => new Promise((resolve, reject) => {
@@ -76,7 +85,7 @@ const filterImageLikeAnOldTV = ({
   }
   const height = mapRGB[0].length
 
-  const setFrame = makeSetFrame(mapRGB, width, height, noise)
+  const setFrame = makeSetFrame(mapRGB, width, height, noise, eightBit)
 
   const gif = new GIF({
     workers: 2,

@@ -28,6 +28,14 @@
     width: 4em;
 }
 
+.check {
+    margin-left: 7.2em;
+}
+
+.check input {
+    width: auto;
+}
+
 .samples img {
     width: 50px;
     vertical-align: middle;

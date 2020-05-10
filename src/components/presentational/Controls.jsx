@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Connector, Input, SettersBlock } from 'state-control'
+import { Check, Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
 import { IDS, SETTERS } from '../../common'
 import style from './style.css'
@@ -17,6 +17,12 @@ const Controls = ({ state, handleChange }) => (
       onChange={handleChange}
       type="number"
     >
+      <Check
+        id={IDS.eightBit}
+        label="8-bit color"
+        type="boolean"
+        className={style.check}
+      />
       <Input
         id={IDS.multiplier}
         label="Pixelization:"
@@ -49,10 +55,13 @@ const Controls = ({ state, handleChange }) => (
 )
 
 Controls.propTypes = {
-  state: PropTypes.shape(_.reduce(IDS, (all, item) => ({
-    ...all,
-    [item]: PropTypes.number,
-  }), {})).isRequired,
+  state: PropTypes.shape({
+    ..._.reduce(IDS, (all, item) => ({
+      ...all,
+      [item]: PropTypes.number,
+    }), {}),
+    [IDS.eightBit]: PropTypes.bool,
+  }).isRequired,
   handleChange: PropTypes.func,
 }
 

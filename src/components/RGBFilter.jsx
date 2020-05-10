@@ -22,7 +22,7 @@ export default class RGBFilter extends Component {
   }
 
   componentDidUpdate () {
-    const { image, sizeLimit, noise, frames, delay, multiplier } = this.state
+    const { image, sizeLimit, noise, frames, delay, multiplier, eightBit } = this.state
     if (this.image && image) {
       this.image.src = THROBBER
       toRGB({
@@ -32,6 +32,7 @@ export default class RGBFilter extends Component {
         delay,
         multiplier,
         image,
+        eightBit,
       }).then((src) => {
         this.image.src = src
         if (this.state.error) {
@@ -55,7 +56,7 @@ export default class RGBFilter extends Component {
 
   handleChange = (name, value) => {
     this.setState({
-      [name]: Math.round((PARAMETER_PROCESSORS[name] || ((v) => v))(value)),
+      [name]: (PARAMETER_PROCESSORS[name] || ((v) => v))(value),
     })
   }
 

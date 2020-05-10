@@ -17,10 +17,16 @@ export function getDivider ({ image, sizeLimit, multiplier }) {
 }
 
 export const PARAMETER_PROCESSORS = {
-  [IDS.multiplier]: (value) => Math.min(Math.max(value, 0), 16),
-  [IDS.sizeLimit]: (value) => Math.min(Math.max(value, 0), 1000),
-  [IDS.noise]: (value) => Math.min(Math.max(value, 0), 100),
-  [IDS.frames]: (value) => Math.min(Math.max(value, 0), 10),
+  [IDS.multiplier]: (value) => Math.round(Math.min(Math.max(value, 0), 16)),
+  [IDS.sizeLimit]: (value) => Math.round(Math.min(Math.max(value, 0), 1000)),
+  [IDS.noise]: (value) => Math.round(Math.min(Math.max(value, 0), 255)),
+  [IDS.frames]: (value) => Math.round(Math.min(Math.max(value, 0), 10)),
 }
 
-export const getDeviation = (noise) => Math.random() * (noise / 100) * 255
+export const getDeviation = (noise) => (Math.random() * 2 - 1) * noise
+
+export function snapTo (colors, number, totalNumberOfColors = 256) {
+  const snap = totalNumberOfColors / colors
+
+  return Math.round(number / snap) * snap
+}
