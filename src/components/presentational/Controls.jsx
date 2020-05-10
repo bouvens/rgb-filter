@@ -36,7 +36,7 @@ const Controls = ({ state, handleChange }) => (
         label="Frames:"
         step={1}
       />
-      {state.frames > 1
+      {state[IDS.frames] > 1
       && (
         <Input
           id={IDS.delay}
