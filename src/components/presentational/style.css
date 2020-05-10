@@ -9,9 +9,14 @@
 }
 
 .controls {
-    float: left;
-    margin-right: 10em;
     margin-bottom: 2em;
+}
+
+@media screen and (min-width: 768px) {
+    .controls {
+        float: left;
+        margin-right: 10em;
+    }
 }
 
 .controls label {
@@ -24,7 +29,7 @@
 }
 
 .samples img {
-    width: 100px;
+    width: 50px;
     vertical-align: middle;
     margin-right: 2em;
     margin-bottom: 1em;

@@ -17,10 +17,10 @@ export function getDivider ({ image, sizeLimit, multiplier }) {
 }
 
 export const PARAMETER_PROCESSORS = {
-  [IDS.multiplier]: (value) => Math.min(Math.max(value, 1), 16),
-  [IDS.sizeLimit]: (value) => Math.min(Math.max(value, 1), 1000),
+  [IDS.multiplier]: (value) => Math.min(Math.max(value, 0), 16),
+  [IDS.sizeLimit]: (value) => Math.min(Math.max(value, 0), 1000),
   [IDS.noise]: (value) => Math.min(Math.max(value, 0), 100),
-  [IDS.frames]: (value) => Math.min(Math.max(value, 1), 10),
+  [IDS.frames]: (value) => Math.min(Math.max(value, 0), 10),
 }
 
 export const getDeviation = (noise) => Math.random() * (noise / 100) * 255
