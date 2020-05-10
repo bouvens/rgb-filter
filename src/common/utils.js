@@ -18,6 +18,8 @@ export function getDivider ({ image, sizeLimit, multiplier }) {
 
 export const PARAMETER_PROCESSORS = {
   [IDS.multiplier]: (value) => Math.round(Math.min(Math.max(value, 0), 16)),
+  [IDS.stripes]: (value) => Math.round(Math.min(Math.max(value, 0), 150)),
+  [IDS.stripesStrength]: (value) => Math.round(Math.min(Math.max(value, 0), 200)),
   [IDS.sizeLimit]: (value) => Math.round(Math.min(Math.max(value, 0), 1000)),
   [IDS.noise]: (value) => Math.round(Math.min(Math.max(value, 0), 255)),
   [IDS.frames]: (value) => Math.round(Math.min(Math.max(value, 0), 10)),
@@ -30,3 +32,8 @@ export function snapTo (colors, number, totalNumberOfColors = 256) {
 
   return Math.round(number / snap) * snap
 }
+
+export const multiply = (modifier, color) => Math.min(
+  Math.round(color * (1 + modifier / 100)),
+  255,
+)

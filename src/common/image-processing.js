@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
-import { getDeviation, snapTo } from './utils'
+import { getDeviation, multiply, snapTo } from './utils'
 
 const SCALED = 'SCALED'
 
@@ -40,7 +40,7 @@ function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
   return { mapRGB, options, error }
 }
 
-const makeSetFrame = (mapRGB, width, height, noise, eightBit) => ({ data }) => {
+const makeSetFrame = (mapRGB, width, height, { noise, eightBit, stripes, stripesStrength }) => ({ data }) => {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       let { r, g, b } = mapRGB[x][y]
@@ -57,6 +57,15 @@ const makeSetFrame = (mapRGB, width, height, noise, eightBit) => ({ data }) => {
         b = snapTo(4, b)
       }
 
+      if (stripes) {
+        const period = height / stripes / (2 * Math.PI)
+        const modifier = Math.sin(y / period) * stripesStrength
+
+        r = multiply(modifier, r)
+        g = multiply(modifier, g)
+        b = multiply(modifier, b)
+      }
+
       data.set([r, g, b, 255], ((y * width) + x) * 4)
     }
   }
@@ -64,16 +73,11 @@ const makeSetFrame = (mapRGB, width, height, noise, eightBit) => ({ data }) => {
 
 const filterImageLikeAnOldTV = ({
   mapRGB,
-  options: {
-    noise,
-    frames,
-    multiplier,
-    imageSmoothingEnabled = false,
-    delay,
-    eightBit,
-  } = {},
+  options = {},
   error,
 }) => new Promise((resolve, reject) => {
+  const { frames, multiplier, delay, imageSmoothingEnabled = false } = options
+
   if (error) {
     reject(new Error(error))
   }
@@ -85,7 +89,7 @@ const filterImageLikeAnOldTV = ({
   }
   const height = mapRGB[0].length
 
-  const setFrame = makeSetFrame(mapRGB, width, height, noise, eightBit)
+  const setFrame = makeSetFrame(mapRGB, width, height, options)
 
   const gif = new GIF({
     workers: 2,

@@ -28,6 +28,16 @@ const Controls = ({ state, handleChange }) => (
         label="Pixelization:"
       />
       <Input
+        id={IDS.stripes}
+        label="Stripes:"
+        step={10}
+      />
+      <Input
+        id={IDS.stripesStrength}
+        label="Stripes strength:"
+        step={5}
+      />
+      <Input
         id={IDS.sizeLimit}
         label="Size limit:"
         step={100}
@@ -35,12 +45,10 @@ const Controls = ({ state, handleChange }) => (
       <Input
         id={IDS.noise}
         label="Color noise:"
-        step={1}
       />
       <Input
         id={IDS.frames}
         label="Frames:"
-        step={1}
       />
       {state[IDS.frames] > 1
       && (
