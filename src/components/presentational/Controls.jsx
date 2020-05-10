@@ -30,7 +30,7 @@ const Controls = ({ state, handleChange }) => (
       <Input
         id={IDS.sizeLimit}
         label="Size limit:"
-        step={200}
+        step={100}
       />
       <Input
         id={IDS.noise}
