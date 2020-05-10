@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   getDivider,
   getImageFromSrc,
+  IDS,
   PARAMETER_PROCESSORS,
   SAMPLE_IMAGE_PATHS,
   SETTERS,
@@ -68,7 +69,7 @@ export default class RGBFilter extends Component {
 
   render () {
     return (
-      <div>
+      <>
         <DragAndDrop
           onDrop={this.handleDrop}
           text="Or drag and drop your image anywhere on the page"
@@ -79,8 +80,10 @@ export default class RGBFilter extends Component {
         />
         <Samples selectImage={this.handleSelectImage} />
         {this.state.error}
-        <Animation setImageRef={this.setImageRef} />
-      </div>
+        <div style={{ minHeight: this.state[IDS.sizeLimit] }}>
+          <Animation setImageRef={this.setImageRef} />
+        </div>
+      </>
     )
   }
 }

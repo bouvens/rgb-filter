@@ -49,3 +49,7 @@
     clear: both;
     text-align: center;
 }
+
+.animation img {
+    max-width: 100%;
+}
