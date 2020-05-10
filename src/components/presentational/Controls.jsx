@@ -19,7 +19,7 @@ const Controls = ({ state, handleChange }) => (
     >
       <Input
         id={IDS.multiplier}
-        label="Multiplier:"
+        label="Pixelization:"
       />
       <Input
         id={IDS.sizeLimit}
