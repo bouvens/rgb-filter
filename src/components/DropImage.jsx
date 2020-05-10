@@ -96,7 +96,7 @@ export default class DropImage extends Component {
 
     let output
 
-    if (_.isEmpty(files) && evt.dataTransfer.getData('text')) {
+    if ((_.isEmpty(files) && evt.dataTransfer.getData('text')) || !file) {
       output = ''
       this.img.src = link
     } else {
