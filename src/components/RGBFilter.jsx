@@ -17,6 +17,8 @@ export default class RGBFilter extends Component {
     error: null,
   }
 
+  loaded = false
+
   componentDidMount () {
     this.handleSelectImage(SAMPLE_IMAGE_PATHS[0])()
   }
@@ -42,6 +44,7 @@ export default class RGBFilter extends Component {
 
   setImageRef = (e) => {
     this.image = e
+    this.loaded = true
   }
 
   handleDrop = (image) => {
@@ -74,8 +77,9 @@ export default class RGBFilter extends Component {
         <Samples selectImage={this.handleSelectImage} />
         <div
           style={{
+            clear: 'both',
             minHeight: this.state[IDS.sizeLimit],
-            visibility: this.image ? 'visible' : 'hidden',
+            visibility: this.loaded ? 'visible' : 'hidden',
           }}
         >
           <Animation setImageRef={this.setImageRef} error={this.state.error} />
