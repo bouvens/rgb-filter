@@ -5,6 +5,7 @@
 .setters > div {
     display: inline-block;
     margin-right: 1em;
+    margin-top: 0.6em;
     margin-bottom: 1.6em;
 }
 
@@ -52,4 +53,9 @@
 
 .animation img {
     max-width: 100%;
+}
+
+.error {
+    background-color: red;
+    padding: 0.2em 0.4em;
 }
