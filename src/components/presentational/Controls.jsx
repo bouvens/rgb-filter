@@ -23,6 +23,12 @@ const Controls = ({ state, handleChange }) => (
         type="boolean"
         className={style.check}
       />
+      <Check
+        id={IDS.discreteStripes}
+        label="Discrete stripes"
+        type="boolean"
+        className={style.check}
+      />
       <Input
         id={IDS.stripes}
         label="Stripes:"
@@ -71,6 +77,7 @@ Controls.propTypes = {
       [item]: PropTypes.number,
     }), {}),
     [IDS.eightBit]: PropTypes.bool,
+    [IDS.discreteStripes]: PropTypes.bool,
   }).isRequired,
   handleChange: PropTypes.func,
 }

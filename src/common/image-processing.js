@@ -43,6 +43,7 @@ const makeSetFrame = (mapRGB, width, height, {
   noise,
   noiseSize,
   eightBit,
+  discreteStripes,
   stripes,
   stripesStrength,
 }) => ({ data }) => {
@@ -82,7 +83,11 @@ const makeSetFrame = (mapRGB, width, height, {
 
       if (stripes) {
         const period = height / stripes / (2 * Math.PI)
-        const modifier = Math.sin(y / period) * stripesStrength
+        let phase = Math.sin(y / period)
+        if (discreteStripes) {
+          phase = phase >= 0 ? 1 : -1
+        }
+        const modifier = phase * stripesStrength
 
         r = multiply(modifier, r)
         g = multiply(modifier, g)

@@ -1,5 +1,6 @@
 export const IDS = {
   eightBit: 'eightBit',
+  discreteStripes: 'discreteStripes',
   stripes: 'stripes',
   stripesStrength: 'stripesStrength',
   sizeLimit: 'sizeLimit',
@@ -25,6 +26,8 @@ export const SAMPLE_IMAGE_PATHS = SAMPLE_IMAGES_NAMES.map(makeFullPath)
 
 export const SETTERS = {
   Animated: {
+    [IDS.eightBit]: true,
+    [IDS.discreteStripes]: false,
     [IDS.stripes]: 50,
     [IDS.stripesStrength]: 15,
     [IDS.sizeLimit]: 500,
