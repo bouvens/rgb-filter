@@ -72,8 +72,13 @@ export default class RGBFilter extends Component {
           handleChange={this.handleChange}
         />
         <Samples selectImage={this.handleSelectImage} />
-        <div style={{ minHeight: this.state[IDS.sizeLimit] }}>
-          <Animation setImageRef={this.setImageRef} error={this.state.error}/>
+        <div
+          style={{
+            minHeight: this.state[IDS.sizeLimit],
+            visibility: this.image ? 'visible' : 'hidden',
+          }}
+        >
+          <Animation setImageRef={this.setImageRef} error={this.state.error} />
         </div>
       </>
     )
