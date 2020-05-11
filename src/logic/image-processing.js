@@ -93,7 +93,7 @@ const addFrames = ({
 
     setFrame(imageData)
     context.putImageData(imageData, 0, 0)
-    gif.addFrame(getScaledCanvas(canvas, multiplier), { delay, copy: true })
+    gif.addFrame(getScaledCanvas(canvas, rgbSplit ? multiplier : 1), { delay, copy: true })
   }
 
   gif.on('finished', (blob) => {
