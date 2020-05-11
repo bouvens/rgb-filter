@@ -1,10 +1,10 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
-import { getDeviation, getDivider, multiply, snapTo } from './utils'
+import { getDeviation, getDivider, multiply, snapTo, triple } from './utils'
 
 function reduceImage ({ image, sizeLimit, ...options }) {
-  const divider = getDivider({ image, sizeLimit })
+  const divider = getDivider({ image, sizeLimit, splitted: options.rgbSplit })
   const canvas = getCanvas()
   const context = getContext()
   const width = image.width / divider
@@ -40,6 +40,7 @@ function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
 }
 
 const makeSetFrame = (mapRGB, width, height, {
+  rgbSplit,
   noise,
   noiseSize,
   eightBit,
@@ -61,6 +62,10 @@ const makeSetFrame = (mapRGB, width, height, {
   }
 
   for (let y = 0; y < height; y += 1) {
+    let redLine = []
+    let greenLine = []
+    let blueLine = []
+
     for (let x = 0; x < width; x += 1) {
       let { r, g, b } = mapRGB[x][y]
 
@@ -70,6 +75,7 @@ const makeSetFrame = (mapRGB, width, height, {
           gNoise,
           bNoise,
         } = noiseMap[Math.floor(x / noiseSize)][Math.floor(y / noiseSize)]
+
         r += rNoise
         g += gNoise
         b += bNoise
@@ -81,7 +87,7 @@ const makeSetFrame = (mapRGB, width, height, {
         b = snapTo(4, b)
       }
 
-      if (stripes) {
+      if (stripes && !rgbSplit) {
         const period = height / stripes / (2 * Math.PI)
         let phase = Math.sin(y / period)
         if (discreteStripes) {
@@ -94,7 +100,21 @@ const makeSetFrame = (mapRGB, width, height, {
         b = multiply(modifier, b)
       }
 
-      data.set([r, g, b, 255], ((y * width) + x) * 4)
+      if (rgbSplit) {
+        const red = [r, 0, 0, 255]
+        const green = [0, g, 0, 255]
+        const blue = [0, 0, b, 255]
+
+        redLine = redLine.concat(triple(red))
+        greenLine = greenLine.concat(triple(green))
+        blueLine = blueLine.concat(triple(blue))
+      } else {
+        data.set([r, g, b, 255], ((y * width) + x) * 4)
+      }
+    }
+
+    if (rgbSplit) {
+      data.set(redLine.concat(greenLine, blueLine), (y * width * 3) * 4 * 3)
     }
   }
 }
@@ -104,7 +124,7 @@ const filterImageLikeAnOldTV = ({
   options = {},
   error,
 }) => new Promise((resolve, reject) => {
-  const { frames, delay } = options
+  const { rgbSplit, frames, delay } = options
 
   if (error) {
     reject(new Error(error))
@@ -117,6 +137,11 @@ const filterImageLikeAnOldTV = ({
   }
   const height = mapRGB[0].length
 
+  if (rgbSplit) {
+    canvas.width = width * 3
+    canvas.height = height * 3
+  }
+
   const setFrame = makeSetFrame(mapRGB, width, height, options)
 
   const gif = new GIF({
@@ -126,7 +151,8 @@ const filterImageLikeAnOldTV = ({
   })
 
   for (let i = 0; i < frames; i += 1) {
-    const imageData = context.getImageData(0, 0, width, height)
+    const multiplier = rgbSplit ? 3 : 1
+    const imageData = context.getImageData(0, 0, width * multiplier, height * multiplier)
 
     setFrame(imageData)
     context.putImageData(imageData, 0, 0)

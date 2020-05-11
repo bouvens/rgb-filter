@@ -18,6 +18,12 @@ const Controls = ({ state, handleChange }) => (
       type="number"
     >
       <Check
+        id={IDS.rgbSplit}
+        label="Split RGB"
+        type="boolean"
+        className={style.check}
+      />
+      <Check
         id={IDS.eightBit}
         label="8-bit color"
         type="boolean"
@@ -29,16 +35,20 @@ const Controls = ({ state, handleChange }) => (
         type="boolean"
         className={style.check}
       />
-      <Input
-        id={IDS.stripes}
-        label="Stripes:"
-        step={10}
-      />
-      <Input
-        id={IDS.stripesStrength}
-        label="Stripes strength:"
-        step={5}
-      />
+      {!state[IDS.rgbSplit] && (
+        <Input
+          id={IDS.stripes}
+          label="Stripes:"
+          step={10}
+        />
+      )}
+      {!state[IDS.rgbSplit] && state[IDS.stripes] > 0 && (
+        <Input
+          id={IDS.stripesStrength}
+          label="Stripes strength:"
+          step={5}
+        />
+      )}
       <Input
         id={IDS.sizeLimit}
         label="Size limit:"
@@ -48,12 +58,12 @@ const Controls = ({ state, handleChange }) => (
         id={IDS.noise}
         label="Color noise:"
       />
-      {state[IDS.noise] ? (
+      {state[IDS.noise] > 0 && (
         <Input
           id={IDS.noiseSize}
           label="Noise pixel:"
         />
-      ) : null}
+      )}
       <Input
         id={IDS.frames}
         label="Frames:"
@@ -76,6 +86,7 @@ Controls.propTypes = {
       ...all,
       [item]: PropTypes.number,
     }), {}),
+    [IDS.rgbSplit]: PropTypes.bool,
     [IDS.eightBit]: PropTypes.bool,
     [IDS.discreteStripes]: PropTypes.bool,
   }).isRequired,

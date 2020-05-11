@@ -1,4 +1,5 @@
 export const IDS = {
+  rgbSplit: 'rgbSplit',
   eightBit: 'eightBit',
   discreteStripes: 'discreteStripes',
   stripes: 'stripes',
