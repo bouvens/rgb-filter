@@ -3,8 +3,15 @@ import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
 import { getDeviation, getDivider, multiply, snapTo, triple } from './utils'
 
+const SCALED = 'SCALED'
+
 function reduceImage ({ image, sizeLimit, ...options }) {
-  const divider = getDivider({ image, sizeLimit, splitted: options.rgbSplit })
+  const divider = getDivider({
+    image,
+    sizeLimit,
+    splitted: options.rgbSplit,
+    multiplier: options.multiplier,
+  })
   const canvas = getCanvas()
   const context = getContext()
   const width = image.width / divider
@@ -124,7 +131,7 @@ const filterImageLikeAnOldTV = ({
   options = {},
   error,
 }) => new Promise((resolve, reject) => {
-  const { rgbSplit, frames, delay } = options
+  const { rgbSplit, frames, delay, multiplier, imageSmoothingEnabled = false } = options
 
   if (error) {
     reject(new Error(error))
@@ -151,12 +158,22 @@ const filterImageLikeAnOldTV = ({
   })
 
   for (let i = 0; i < frames; i += 1) {
-    const multiplier = rgbSplit ? 3 : 1
-    const imageData = context.getImageData(0, 0, width * multiplier, height * multiplier)
+    const splitMultiplier = rgbSplit ? 3 : 1
+    const imageData = context.getImageData(0, 0, width * splitMultiplier, height * splitMultiplier)
 
     setFrame(imageData)
     context.putImageData(imageData, 0, 0)
-    gif.addFrame(canvas, { delay, copy: true })
+
+    const scaledCanvas = getCanvas(SCALED)
+    scaledCanvas.width = canvas.width * multiplier
+    scaledCanvas.height = canvas.height * multiplier
+    const scaledContext = getContext(SCALED)
+    scaledContext.imageSmoothingEnabled = imageSmoothingEnabled
+    scaledContext.msImageSmoothingEnabled = imageSmoothingEnabled
+    scaledContext.scale(multiplier, multiplier)
+    scaledContext.drawImage(canvas, 0, 0)
+
+    gif.addFrame(scaledCanvas, { delay, copy: true })
   }
 
   gif.on('finished', (blob) => {

@@ -1,6 +1,7 @@
 export const IDS = {
   rgbSplit: 'rgbSplit',
   eightBit: 'eightBit',
+  multiplier: 'multiplier',
   discreteStripes: 'discreteStripes',
   stripes: 'stripes',
   stripesStrength: 'stripesStrength',
@@ -27,7 +28,9 @@ export const SAMPLE_IMAGE_PATHS = SAMPLE_IMAGES_NAMES.map(makeFullPath)
 
 export const SETTERS = {
   Animated: {
+    [IDS.rgbSplit]: false,
     [IDS.eightBit]: true,
+    [IDS.multiplier]: 1,
     [IDS.discreteStripes]: false,
     [IDS.stripes]: 50,
     [IDS.stripesStrength]: 15,
@@ -38,12 +41,14 @@ export const SETTERS = {
     [IDS.delay]: 300,
   },
   Still: {
+    [IDS.multiplier]: 3,
     [IDS.sizeLimit]: 800,
     [IDS.noise]: 5,
     [IDS.noiseSize]: 3,
     [IDS.frames]: 1,
   },
   Slow: {
+    [IDS.multiplier]: 2,
     [IDS.sizeLimit]: 500,
     [IDS.noise]: 6,
     [IDS.noiseSize]: 2,
@@ -51,6 +56,7 @@ export const SETTERS = {
     [IDS.delay]: 800,
   },
   Sharp: {
+    [IDS.multiplier]: 1,
     [IDS.sizeLimit]: 500,
     [IDS.noise]: 5,
     [IDS.noiseSize]: 1,

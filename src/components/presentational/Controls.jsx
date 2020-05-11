@@ -29,12 +29,20 @@ const Controls = ({ state, handleChange }) => (
         type="boolean"
         className={style.check}
       />
-      <Check
-        id={IDS.discreteStripes}
-        label="Discrete stripes"
-        type="boolean"
-        className={style.check}
-      />
+      {state[IDS.rgbSplit] && (
+        <Input
+          id={IDS.multiplier}
+          label="Pixelization:"
+        />
+      )}
+      {!state[IDS.rgbSplit] && (
+        <Check
+          id={IDS.discreteStripes}
+          label="Discrete stripes"
+          type="boolean"
+          className={style.check}
+        />
+      )}
       {!state[IDS.rgbSplit] && (
         <Input
           id={IDS.stripes}

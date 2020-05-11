@@ -9,10 +9,10 @@ export const getImageFromSrc = (src) => new Promise((resolve) => {
   image.src = src
 })
 
-export function getDivider ({ image, sizeLimit, splitted }) {
+export function getDivider ({ image, sizeLimit, splitted, multiplier }) {
   const maxSize = Math.max(image.width, image.height)
 
-  return (maxSize / sizeLimit) * (splitted ? 3 : 1)
+  return (maxSize / sizeLimit) * (splitted ? 3 * multiplier : 1)
 }
 
 const makeRange = (min, max) => (value) => Math.round(Math.min(Math.max(value, min), max))
