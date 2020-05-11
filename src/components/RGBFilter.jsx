@@ -7,7 +7,7 @@ import {
   SETTERS,
   THROBBER,
   toRGB,
-} from '../common'
+} from '../logic'
 import DragAndDrop from './DropImage'
 import { Animation, Controls, Samples } from './presentational'
 

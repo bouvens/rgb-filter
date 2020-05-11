@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Check, Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
-import { IDS, SETTERS } from '../../common'
+import { IDS, SETTERS } from '../../logic'
 import style from './style.css'
 
 const Controls = ({ state, handleChange }) => (
