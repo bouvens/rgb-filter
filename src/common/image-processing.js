@@ -1,11 +1,10 @@
 import _ from 'lodash'
 import GIF from 'gif.js'
 import { getCanvas, getContext } from './singletons'
-import { getDeviation, multiply, snapTo } from './utils'
+import { getDeviation, getDivider, multiply, snapTo } from './utils'
 
-const SCALED = 'SCALED'
-
-function reduceImage ({ image, divider, ...options }) {
+function reduceImage ({ image, sizeLimit, ...options }) {
+  const divider = getDivider({ image, sizeLimit })
   const canvas = getCanvas()
   const context = getContext()
   const width = image.width / divider
@@ -40,15 +39,39 @@ function mapToRGB ({ data: { data, width, height } = {}, options, error }) {
   return { mapRGB, options, error }
 }
 
-const makeSetFrame = (mapRGB, width, height, { noise, eightBit, stripes, stripesStrength }) => ({ data }) => {
+const makeSetFrame = (mapRGB, width, height, {
+  noise,
+  noiseSize,
+  eightBit,
+  stripes,
+  stripesStrength,
+}) => ({ data }) => {
+  const noiseMap = []
+  if (noise && noiseSize) {
+    for (let y = 0; y < height / noiseSize; y += 1) {
+      for (let x = 0; x < width / noiseSize; x += 1) {
+        _.set(noiseMap, [x, y], {
+          rNoise: getDeviation(noise),
+          gNoise: getDeviation(noise),
+          bNoise: getDeviation(noise),
+        })
+      }
+    }
+  }
+
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       let { r, g, b } = mapRGB[x][y]
 
       if (noise) {
-        r += getDeviation(noise)
-        g += getDeviation(noise)
-        b += getDeviation(noise)
+        const {
+          rNoise,
+          gNoise,
+          bNoise,
+        } = noiseMap[Math.floor(x / noiseSize)][Math.floor(y / noiseSize)]
+        r += rNoise
+        g += gNoise
+        b += bNoise
       }
 
       if (eightBit) {
@@ -76,7 +99,7 @@ const filterImageLikeAnOldTV = ({
   options = {},
   error,
 }) => new Promise((resolve, reject) => {
-  const { frames, multiplier, delay, imageSmoothingEnabled = false } = options
+  const { frames, delay } = options
 
   if (error) {
     reject(new Error(error))
@@ -101,26 +124,8 @@ const filterImageLikeAnOldTV = ({
     const imageData = context.getImageData(0, 0, width, height)
 
     setFrame(imageData)
-
     context.putImageData(imageData, 0, 0)
-
-    const scaledCanvas = getCanvas(SCALED)
-
-    scaledCanvas.width = canvas.width * multiplier
-    scaledCanvas.height = canvas.height * multiplier
-
-    const scaledContext = getContext(SCALED)
-
-    scaledContext.imageSmoothingEnabled = imageSmoothingEnabled
-    scaledContext.msImageSmoothingEnabled = imageSmoothingEnabled
-
-    scaledContext.scale(multiplier, multiplier)
-    scaledContext.drawImage(canvas, 0, 0)
-
-    gif.addFrame(scaledCanvas, {
-      delay,
-      copy: true,
-    })
+    gif.addFrame(canvas, { delay, copy: true })
   }
 
   gif.on('finished', (blob) => {

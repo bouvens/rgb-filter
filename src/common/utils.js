@@ -9,20 +9,21 @@ export const getImageFromSrc = (src) => new Promise((resolve) => {
   image.src = src
 })
 
-export function getDivider ({ image, sizeLimit, multiplier }) {
+export function getDivider ({ image, sizeLimit }) {
   const maxSize = Math.max(image.width, image.height)
-  const realLimit = sizeLimit / multiplier
 
-  return maxSize / realLimit
+  return maxSize / sizeLimit
 }
 
+const makeRange = (min, max) => (value) => Math.round(Math.min(Math.max(value, min), max))
+
 export const PARAMETER_PROCESSORS = {
-  [IDS.multiplier]: (value) => Math.round(Math.min(Math.max(value, 0), 16)),
-  [IDS.stripes]: (value) => Math.round(Math.min(Math.max(value, 0), 150)),
-  [IDS.stripesStrength]: (value) => Math.round(Math.min(Math.max(value, 0), 200)),
-  [IDS.sizeLimit]: (value) => Math.round(Math.min(Math.max(value, 0), 1000)),
-  [IDS.noise]: (value) => Math.round(Math.min(Math.max(value, 0), 255)),
-  [IDS.frames]: (value) => Math.round(Math.min(Math.max(value, 0), 10)),
+  [IDS.stripes]: makeRange(0, 150),
+  [IDS.stripesStrength]: makeRange(0, 200),
+  [IDS.sizeLimit]: makeRange(0, 1000),
+  [IDS.noise]: makeRange(0, 255),
+  [IDS.noiseSize]: makeRange(0, 10),
+  [IDS.frames]: makeRange(0, 10),
 }
 
 export const getDeviation = (noise) => (Math.random() * 2 - 1) * noise

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  getDivider,
   getImageFromSrc,
   IDS,
   PARAMETER_PROCESSORS,
@@ -23,22 +22,21 @@ export default class RGBFilter extends Component {
   }
 
   componentDidUpdate () {
-    const { image, sizeLimit, multiplier } = this.state
+    const { image } = this.state
     if (this.image && image) {
       this.image.src = THROBBER
-      toRGB({
-        divider: getDivider({ image, sizeLimit, multiplier }),
-        ...this.state,
-      }).then((src) => {
-        this.image.src = src
-        if (this.state.error) {
-          this.setState({ error: null })
-        }
-      }).catch((error) => {
-        if (!this.state.error) {
-          this.setState({ error: error.toString() })
-        }
-      })
+      toRGB(this.state)
+        .then((src) => {
+          this.image.src = src
+          if (this.state.error) {
+            this.setState({ error: null })
+          }
+        })
+        .catch((error) => {
+          if (!this.state.error) {
+            this.setState({ error: error.toString() })
+          }
+        })
     }
   }
 

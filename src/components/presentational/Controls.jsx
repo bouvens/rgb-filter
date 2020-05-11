@@ -24,10 +24,6 @@ const Controls = ({ state, handleChange }) => (
         className={style.check}
       />
       <Input
-        id={IDS.multiplier}
-        label="Pixelization:"
-      />
-      <Input
         id={IDS.stripes}
         label="Stripes:"
         step={10}
@@ -46,6 +42,12 @@ const Controls = ({ state, handleChange }) => (
         id={IDS.noise}
         label="Color noise:"
       />
+      {state[IDS.noise] ? (
+        <Input
+          id={IDS.noiseSize}
+          label="Noise pixel:"
+        />
+      ) : null}
       <Input
         id={IDS.frames}
         label="Frames:"
