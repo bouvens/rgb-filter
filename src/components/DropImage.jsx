@@ -117,7 +117,7 @@ export default class DropImage extends Component {
 
   render () {
     return (
-      <div>
+      <>
         <div className={style.header}>
           <input type="file" onChange={this.handleFile} />
           {this.props.text}
@@ -137,7 +137,7 @@ export default class DropImage extends Component {
             </div>
           )}
         </BodyPortal>
-      </div>
+      </>
     )
   }
 }

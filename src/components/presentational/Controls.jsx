@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import { Check, Connector, Input, SettersBlock } from 'state-control'
 import _ from 'lodash'
 import { IDS, SETTERS } from '../../logic'
+import Samples from './Samples'
 import style from './style.css'
 
-const Controls = ({ state, handleChange }) => (
+const Controls = ({ state, handleChange, selectImage }) => (
   <div className={style.controls}>
+    <Samples selectImage={selectImage} />
     <SettersBlock
       className={style.setters}
       setters={SETTERS}
@@ -36,14 +38,6 @@ const Controls = ({ state, handleChange }) => (
         />
       )}
       {!state[IDS.rgbSplit] && (
-        <Check
-          id={IDS.discreteStripes}
-          label="Discrete stripes"
-          type="boolean"
-          className={style.check}
-        />
-      )}
-      {!state[IDS.rgbSplit] && (
         <Input
           id={IDS.stripeSize}
           label="Stripe size:"
@@ -55,6 +49,14 @@ const Controls = ({ state, handleChange }) => (
           id={IDS.stripesStrength}
           label="Stripes strength:"
           step={5}
+        />
+      )}
+      {!state[IDS.rgbSplit] && state[IDS.stripeSize] > 0 && (
+        <Check
+          id={IDS.discreteStripes}
+          label="Discrete stripes"
+          type="boolean"
+          className={style.check}
         />
       )}
       <Input
@@ -69,7 +71,7 @@ const Controls = ({ state, handleChange }) => (
       {state[IDS.noise] > 0 && (
         <Input
           id={IDS.noiseSize}
-          label="Noise pixel:"
+          label="Noise size:"
         />
       )}
       <Input
@@ -99,10 +101,12 @@ Controls.propTypes = {
     [IDS.discreteStripes]: PropTypes.bool,
   }).isRequired,
   handleChange: PropTypes.func,
+  selectImage: PropTypes.func,
 }
 
 Controls.defaultProps = {
   handleChange: _.noop,
+  selectImage: _.noop,
 }
 
 export default Controls

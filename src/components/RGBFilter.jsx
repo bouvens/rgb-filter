@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   getImageFromSrc,
-  IDS,
   PARAMETER_PROCESSORS,
   SAMPLE_IMAGE_PATHS,
   SETTERS,
@@ -9,7 +8,7 @@ import {
   toRGB,
 } from '../logic'
 import DragAndDrop from './DropImage'
-import { Animation, Controls, Samples } from './presentational'
+import { Animation, Controls, style } from './presentational'
 
 export default class RGBFilter extends Component {
   state = {
@@ -65,26 +64,25 @@ export default class RGBFilter extends Component {
 
   render () {
     return (
-      <>
-        <DragAndDrop
-          onDrop={this.handleDrop}
-          text="Or drag and drop your image anywhere on the page"
-        />
-        <Controls
-          state={this.state}
-          handleChange={this.handleChange}
-        />
-        <Samples selectImage={this.handleSelectImage} />
+      <div className={style.application}>
+        <div className={style.leftPane}>
+          <DragAndDrop
+            onDrop={this.handleDrop}
+            text="Or drag and drop your image anywhere on the page"
+          />
+          <Controls
+            state={this.state}
+            handleChange={this.handleChange}
+            selectImage={this.handleSelectImage}
+          />
+        </div>
         <div
-          style={{
-            clear: 'both',
-            minHeight: this.state[IDS.sizeLimit],
-            visibility: this.loaded ? 'visible' : 'hidden',
-          }}
+          className={style.rightPane}
+          style={{ visibility: this.loaded ? 'visible' : 'hidden' }}
         >
           <Animation setImageRef={this.setImageRef} error={this.state.error} />
         </div>
-      </>
+      </div>
     )
   }
 }
