@@ -45,12 +45,12 @@ const Controls = ({ state, handleChange }) => (
       )}
       {!state[IDS.rgbSplit] && (
         <Input
-          id={IDS.stripes}
-          label="Stripes:"
-          step={10}
+          id={IDS.stripeSize}
+          label="Stripe size:"
+          step={1}
         />
       )}
-      {!state[IDS.rgbSplit] && state[IDS.stripes] > 0 && (
+      {!state[IDS.rgbSplit] && state[IDS.stripeSize] > 0 && (
         <Input
           id={IDS.stripesStrength}
           label="Stripes strength:"

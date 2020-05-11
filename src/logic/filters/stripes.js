@@ -4,15 +4,14 @@ const multiply = (modifier, color) => Math.min(
 )
 
 export function stripesFilter ({ color, mapRGB, x, y, options }) {
-  const { rgbSplit, discreteStripes, stripes, stripesStrength } = options
+  const { rgbSplit, discreteStripes, stripeSize, stripesStrength } = options
   let { r, g, b } = color || mapRGB[x][y]
-  const height = mapRGB[0].length
 
-  if (stripes && !rgbSplit) {
-    const period = height / stripes / (2 * Math.PI)
-    let phase = Math.sin(y / period)
+  if (stripeSize && !rgbSplit) {
+    const period = stripeSize / Math.PI
+    let phase = Math.sin((y + 1) / period)
     if (discreteStripes) {
-      phase = phase >= 0 ? 1 : -1
+      phase = phase > 0 ? 1 : -1
     }
     const modifier = phase * stripesStrength
 

@@ -29,7 +29,7 @@ export const getImageFromSrc = (src) => new Promise((resolve) => {
 const makeRange = (min, max) => (value) => Math.round(Math.min(Math.max(value, min), max))
 
 export const PARAMETER_PROCESSORS = {
-  [IDS.stripes]: makeRange(0, 150),
+  [IDS.stripeSize]: makeRange(0, 10),
   [IDS.stripesStrength]: makeRange(0, 200),
   [IDS.sizeLimit]: makeRange(0, 1000),
   [IDS.noise]: makeRange(0, 255),

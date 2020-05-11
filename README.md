@@ -9,7 +9,7 @@ In browser image processing for old fashion stylizing.
 
 ## What's this?
 
-This Javascript application decomposes every pixel into 3 primitive stripes of clear colors: red, green and blue. Result may be zoomed without smoothing.
+This Javascript application decomposes every pixel into 3 primitive stripeSize of clear colors: red, green and blue. Result may be zoomed without smoothing.
 
 On the next photo you can find usual white on IPS panel on the left side and decomposed by this application white on the right side.
 
