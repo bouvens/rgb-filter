@@ -1,25 +1,32 @@
 body {
     font-family: sans-serif;
-    margin: 2em 4em;
-    padding: 0;
+    margin: 0;
+    padding: 0.5em;
     background-color: #333;
     color: #eee;
 }
 
-hr {
-    margin-bottom: 1.2em;
+@media screen and (min-width: 768px) {
+    body {
+        padding: 2em 4em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .fork-me {
+        display: none;
+    }
 }
 
 .DropImage__header__3ENrf {
     font-size: 20px;
     font-weight: bold;
     font-family: sans-serif;
-    margin-bottom: 0.6em;
     color: #aaa;
 }
 
 .DropImage__output__1EpGt {
-    margin-bottom: 1.2em;
+    margin-top: 0.6em;
     color: #aaa;
 }
 
@@ -38,6 +45,22 @@ hr {
     font-size: 15vw;
 }
 
+@media screen and (min-width: 768px) {
+    .style__application__1pZ2x {
+        display: flex;
+    }
+
+    .style__leftPane__kVXGS {
+        float: left;
+        max-width: 40%;
+        margin-right: 5em;
+    }
+
+    .style__rightPane__3faag {
+        flex-grow: 1;
+    }
+}
+
 .style__setters__2Mo3S a {
     color: lightblue;
 }
@@ -45,12 +68,11 @@ hr {
 .style__setters__2Mo3S > div {
     display: inline-block;
     margin-right: 1em;
+    margin-top: 0.6em;
     margin-bottom: 1.6em;
 }
 
 .style__controls__v2gwb {
-    float: left;
-    margin-right: 10em;
     margin-bottom: 2em;
 }
 
@@ -63,8 +85,16 @@ hr {
     width: 4em;
 }
 
+.style__check__2hNIt {
+    margin-left: 7.2em;
+}
+
+.style__check__2hNIt input {
+    width: auto;
+}
+
 .style__samples__3A5tX img {
-    width: 100px;
+    width: 50px;
     vertical-align: middle;
     margin-right: 2em;
     margin-bottom: 1em;
@@ -72,7 +102,15 @@ hr {
 }
 
 .style__animation__2tLY9 {
-    clear: both;
     text-align: center;
+}
+
+.style__animation__2tLY9 img {
+    max-width: 100%;
+}
+
+.style__error__1WRBa {
+    background-color: red;
+    padding: 0.2em 0.4em;
 }
 
