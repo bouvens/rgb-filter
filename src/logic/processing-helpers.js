@@ -9,7 +9,7 @@ export function getDivider ({ image, sizeLimit, splitted, multiplier }) {
 
 const triple = (c) => c.concat(c, c)
 
-const allFilters = _.flow([noiseFilter, eightBitFilter, stripesFilter])
+const allFilters = _.flow([eightBitFilter, noiseFilter, stripesFilter])
 
 export const makeSetFrame = (mapRGB, width, height, options) => ({ data }) => {
   const { rgbSplit, noise, noiseSize } = options
