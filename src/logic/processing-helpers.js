@@ -75,17 +75,17 @@ export const makeSetFrame = (mapRGB, width, height, options) => ({ data }) => {
       if (rgbSplit) {
         const { c, m, y, k } = rgb2cmyk(r, g, b)
 
-        const { r: rc, g: gc, b: bc } = cmyk2rgb(c, 0, 0, 0)
-        const cyan = [rc, gc, bc, 255]
-
-        const { r: rm, g: gm, b: bm } = cmyk2rgb(0, m, 0, 0)
-        const magenta = [rm, gm, bm, 255]
-
-        const { r: ry, g: gy, b: by } = cmyk2rgb(0, 0, y, 0)
-        const yellow = [ry, gy, by, 255]
-
         const { r: rk, g: gk, b: bk } = cmyk2rgb(0, 0, 0, k)
         const key = [rk, gk, bk, 255]
+
+        const { r: rc, g: gc, b: bc } = cmyk2rgb(c, 0, 0, 0)
+        const cyan = [rc === 255 ? rk : rc, gc === 255 ? gk : gc, bc === 255 ? bk : bc, 255]
+
+        const { r: rm, g: gm, b: bm } = cmyk2rgb(0, m, 0, 0)
+        const magenta = [rm === 255 ? rk : rm, gm === 255 ? gk : gm, bm === 255 ? bk : bm, 255]
+
+        const { r: ry, g: gy, b: by } = cmyk2rgb(0, 0, y, 0)
+        const yellow = [ry === 255 ? rk : ry, gy === 255 ? gk : gy, by === 255 ? bk : by, 255]
 
         cyanLine = cyanLine.concat(quadruple(cyan))
         magentaLine = magentaLine.concat(quadruple(magenta))
