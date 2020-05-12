@@ -16,9 +16,11 @@ export const IDS = {
 
 const BASE_THROBBER = 'triangles.svg'
 const SAMPLE_IMAGES_NAMES = [
-  'moon.jpg',
-  'sunset.jpg',
-  'wikipe-tan.png',
+  'bonfire.jpg',
+  'bay.jpg',
+  'city.jpg',
+  'clouds.jpg',
+  'taxi.jpg',
 ]
 
 const makeFullPath = (name) => `./images/${name}`
