@@ -14,7 +14,7 @@ export default class DropImage extends Component {
 
   static defaultProps = {
     onDrop: _.noop,
-    text: 'Or drag an image on the page',
+    text: 'or drag an image on the page',
   }
 
   state = {
@@ -117,7 +117,7 @@ export default class DropImage extends Component {
 
   render () {
     return (
-      <div>
+      <>
         <div className={style.header}>
           <input type="file" onChange={this.handleFile} />
           {this.props.text}
@@ -137,7 +137,7 @@ export default class DropImage extends Component {
             </div>
           )}
         </BodyPortal>
-      </div>
+      </>
     )
   }
 }

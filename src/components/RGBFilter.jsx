@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import {
-  getDivider,
   getImageFromSrc,
   PARAMETER_PROCESSORS,
   SAMPLE_IMAGE_PATHS,
   SETTERS,
   THROBBER,
   toRGB,
-} from '../common'
+} from '../logic'
 import DragAndDrop from './DropImage'
-import { Animation, Controls, Samples } from './presentational'
+import { Animation, Controls, style } from './presentational'
 
 export default class RGBFilter extends Component {
   state = {
@@ -17,36 +16,34 @@ export default class RGBFilter extends Component {
     error: null,
   }
 
+  loaded = false
+
   componentDidMount () {
     this.handleSelectImage(SAMPLE_IMAGE_PATHS[0])()
   }
 
   componentDidUpdate () {
-    const { image, limit, noise, frames, delay, multiplier } = this.state
+    const { image } = this.state
     if (this.image && image) {
       this.image.src = THROBBER
-      toRGB({
-        divider: getDivider({ image, limit, multiplier }),
-        noise,
-        frames,
-        delay,
-        multiplier,
-        image,
-      }).then((src) => {
-        this.image.src = src
-        if (this.state.error) {
-          this.setState({ error: null })
-        }
-      }).catch((error) => {
-        if (!this.state.error) {
-          this.setState({ error: error.toString() })
-        }
-      })
+      toRGB(this.state)
+        .then((src) => {
+          this.image.src = src
+          if (this.state.error) {
+            this.setState({ error: null })
+          }
+        })
+        .catch((error) => {
+          if (!this.state.error) {
+            this.setState({ error: error.toString() })
+          }
+        })
     }
   }
 
   setImageRef = (e) => {
     this.image = e
+    this.loaded = true
   }
 
   handleDrop = (image) => {
@@ -55,7 +52,7 @@ export default class RGBFilter extends Component {
 
   handleChange = (name, value) => {
     this.setState({
-      [name]: Math.round((PARAMETER_PROCESSORS[name] || ((v) => v))(value)),
+      [name]: (PARAMETER_PROCESSORS[name] || ((v) => v))(value),
     })
   }
 
@@ -67,18 +64,24 @@ export default class RGBFilter extends Component {
 
   render () {
     return (
-      <div>
-        <DragAndDrop
-          onDrop={this.handleDrop}
-          text="Or drag and drop your image anywhere on the page"
-        />
-        <Controls
-          state={this.state}
-          handleChange={this.handleChange}
-        />
-        <Samples selectImage={this.handleSelectImage} />
-        {this.state.error}
-        <Animation setImageRef={this.setImageRef} />
+      <div className={style.application}>
+        <div className={style.leftPane}>
+          <DragAndDrop
+            onDrop={this.handleDrop}
+            text="or drag and drop your image anywhere on the page"
+          />
+          <Controls
+            state={this.state}
+            handleChange={this.handleChange}
+            selectImage={this.handleSelectImage}
+          />
+        </div>
+        <div
+          className={style.rightPane}
+          style={{ visibility: this.loaded ? 'visible' : 'hidden' }}
+        >
+          <Animation setImageRef={this.setImageRef} error={this.state.error} />
+        </div>
       </div>
     )
   }

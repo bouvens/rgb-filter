@@ -1,3 +1,19 @@
+@media screen and (min-width: 768px) {
+    .application {
+        display: flex;
+    }
+
+    .leftPane {
+        float: left;
+        max-width: 40%;
+        margin-right: 5em;
+    }
+
+    .rightPane {
+        flex-grow: 1;
+    }
+}
+
 .setters a {
     color: lightblue;
 }
@@ -5,12 +21,11 @@
 .setters > div {
     display: inline-block;
     margin-right: 1em;
+    margin-top: 0.6em;
     margin-bottom: 1.6em;
 }
 
 .controls {
-    float: left;
-    margin-right: 10em;
     margin-bottom: 2em;
 }
 
@@ -23,8 +38,16 @@
     width: 4em;
 }
 
+.check {
+    margin-left: 7.2em;
+}
+
+.check input {
+    width: auto;
+}
+
 .samples img {
-    width: 100px;
+    width: 50px;
     vertical-align: middle;
     margin-right: 2em;
     margin-bottom: 1em;
@@ -32,6 +55,14 @@
 }
 
 .animation {
-    clear: both;
     text-align: center;
+}
+
+.animation img {
+    max-width: 100%;
+}
+
+.error {
+    background-color: red;
+    padding: 0.2em 0.4em;
 }
