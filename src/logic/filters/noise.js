@@ -22,7 +22,7 @@ export function noiseFilter ({ color, mapRGB, x, y, options }) {
   const { noise, noiseSize } = options
   let { r, g, b } = color || mapRGB[x][y]
 
-  if (noise) {
+  if (noise && noiseSize) {
     const {
       rNoise,
       gNoise,
