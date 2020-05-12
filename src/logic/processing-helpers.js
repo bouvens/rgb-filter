@@ -4,40 +4,100 @@ import { eightBitFilter, noiseFilter, stripesFilter, updateNoiseMap } from './fi
 export function getDivider ({ image, sizeLimit, splitted, multiplier }) {
   const maxSize = Math.max(image.width, image.height)
 
-  return (maxSize / sizeLimit) * (splitted ? 3 * multiplier : 1)
+  return (maxSize / sizeLimit) * (splitted ? 4 * multiplier : 1)
 }
 
-const triple = (c) => c.concat(c, c)
+const quadruple = (c) => c.concat(c, c, c)
 
 const allFilters = _.flow([eightBitFilter, noiseFilter, stripesFilter])
+
+function cmyk2rgb (c, m, y, k, normalized) {
+  c /= 100
+  m /= 100
+  y /= 100
+  k /= 100
+
+  c = c * (1 - k) + k
+  m = m * (1 - k) + k
+  y = y * (1 - k) + k
+
+  let r = 1 - c
+  let g = 1 - m
+  let b = 1 - y
+
+  if (!normalized) {
+    r = Math.round(255 * r)
+    g = Math.round(255 * g)
+    b = Math.round(255 * b)
+  }
+
+  return { r, g, b }
+}
+
+function rgb2cmyk (r, g, b, normalized) {
+  let c = 1 - (r / 255)
+  let m = 1 - (g / 255)
+  let y = 1 - (b / 255)
+  let k = Math.min(c, Math.min(m, y))
+
+  c = (c - k) / (1 - k)
+  m = (m - k) / (1 - k)
+  y = (y - k) / (1 - k)
+
+  if (!normalized) {
+    c = Math.round(c * 10000) / 100
+    m = Math.round(m * 10000) / 100
+    y = Math.round(y * 10000) / 100
+    k = Math.round(k * 10000) / 100
+  }
+
+  c = isNaN(c) ? 0 : c
+  m = isNaN(m) ? 0 : m
+  y = isNaN(y) ? 0 : y
+  k = isNaN(k) ? 0 : k
+
+  return { c, m, y, k }
+}
 
 export const makeSetFrame = (mapRGB, width, height, options) => ({ data }) => {
   const { rgbSplit, noise, noiseSize } = options
   updateNoiseMap(width, height, noise, noiseSize)
 
   for (let y = 0; y < height; y += 1) {
-    let redLine = []
-    let greenLine = []
-    let blueLine = []
+    let cyanLine = []
+    let magentaLine = []
+    let yellowLine = []
+    let keyLine = []
 
     for (let x = 0; x < width; x += 1) {
       const { r, g, b } = allFilters({ mapRGB, x, y, options }).color
 
       if (rgbSplit) {
-        const red = [r, 0, 0, 255]
-        const green = [0, g, 0, 255]
-        const blue = [0, 0, b, 255]
+        const { c, m, y, k } = rgb2cmyk(r, g, b)
 
-        redLine = redLine.concat(triple(red))
-        greenLine = greenLine.concat(triple(green))
-        blueLine = blueLine.concat(triple(blue))
+        const { r: rc, g: gc, b: bc } = cmyk2rgb(c, 0, 0, 0)
+        const cyan = [rc, gc, bc, 255]
+
+        const { r: rm, g: gm, b: bm } = cmyk2rgb(0, m, 0, 0)
+        const magenta = [rm, gm, bm, 255]
+
+        const { r: ry, g: gy, b: by } = cmyk2rgb(0, 0, y, 0)
+        const yellow = [ry, gy, by, 255]
+
+        const { r: rk, g: gk, b: bk } = cmyk2rgb(0, 0, 0, k)
+        const key = [rk, gk, bk, 255]
+
+        cyanLine = cyanLine.concat(quadruple(cyan))
+        magentaLine = magentaLine.concat(quadruple(magenta))
+        yellowLine = yellowLine.concat(quadruple(yellow))
+        keyLine = keyLine.concat(quadruple(key))
       } else {
         data.set([r, g, b, 255], ((y * width) + x) * 4)
       }
     }
 
     if (rgbSplit) {
-      data.set(redLine.concat(greenLine, blueLine), (y * width * 3) * 4 * 3)
+      data.set(cyanLine.concat(magentaLine, yellowLine, keyLine), (y * width * 4) * 4 * 4)
     }
   }
 }

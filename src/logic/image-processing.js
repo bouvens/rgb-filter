@@ -81,7 +81,7 @@ const addFrames = ({
   const canvas = getCanvas()
   const context = getContext()
 
-  const splitMultiplier = rgbSplit ? 3 : 1
+  const splitMultiplier = rgbSplit ? 4 : 1
   const width = initWidth * splitMultiplier
   const height = initHeight * splitMultiplier
 
