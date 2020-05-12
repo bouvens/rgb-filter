@@ -68,7 +68,7 @@ export default class RGBFilter extends Component {
         <div className={style.leftPane}>
           <DragAndDrop
             onDrop={this.handleDrop}
-            text="Or drag and drop your image anywhere on the page"
+            text="or drag and drop your image anywhere on the page"
           />
           <Controls
             state={this.state}

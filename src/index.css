@@ -11,3 +11,9 @@ body {
         padding: 2em 4em;
     }
 }
+
+@media screen and (max-width: 480px) {
+    :global(.fork-me) {
+        display: none;
+    }
+}

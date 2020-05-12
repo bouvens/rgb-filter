@@ -14,7 +14,7 @@ export default class DropImage extends Component {
 
   static defaultProps = {
     onDrop: _.noop,
-    text: 'Or drag an image on the page',
+    text: 'or drag an image on the page',
   }
 
   state = {
