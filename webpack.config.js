@@ -11,10 +11,15 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist'),
     publicPath: '',
-    filename: '[name].bundle.js',
+    filename: '[name].js',
     globalObject: 'this',
   },
   devtool: isProduction ? undefined : 'eval-source-map',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   module: {
     rules: [
       {
