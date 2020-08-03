@@ -1,6 +1,6 @@
 # RGB Filter
 
-In browser image processing for old fashion stylizing.
+Image processing and GIF generator in a browser for old fashion stylizing.
 
 ### Take a look at the [Demo](https://bouvens.github.io/rgb-filter/)
 
@@ -9,13 +9,13 @@ In browser image processing for old fashion stylizing.
 
 ## What's This?
 
-This Javascript application decomposes every pixel into 3 primitive stripeSize of clear colors: red, green and blue. Result may be zoomed without smoothing.
+This Javascript application decomposes every pixel into three stripes of bright colors: red, green, and blue. You may zoom the result without smoothing.
 
-On the next photo you can find usual white on IPS panel on the left side and decomposed by this application white on the right side.
+In the next photo, you can find the usual white on an IPS panel on the left side and decomposed by this application white on the right side.
 
 ![Zoomed IPS panel](https://raw.githubusercontent.com/bouvens/rgb-filter/master/images/ips.jpg)
 
-Also, there’re an animated noise on the colors, smooth and discrete stripes, and converting to 8-bit color!
+Also, there're an animated noise on the colors, smooth and discrete stripes, and converting to 8-bit color!
 
 | Before  | After |
 | ------------- | ------------- |
@@ -31,7 +31,7 @@ yarn
 yarn start
 ```
 
-Also there's a script for local build in the dist directory:
+Also, there's a script for local build in the dist directory:
 ```Shell
 yarn run build
 ```
