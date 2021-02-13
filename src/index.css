@@ -12,6 +12,14 @@ body {
     }
 }
 
+a {
+    color: #69f;
+}
+
+a:visited {
+    color: #a5f;
+}
+
 @media screen and (max-width: 480px) {
     :global(.fork-me) {
         display: none;
