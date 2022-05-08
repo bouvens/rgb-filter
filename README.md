@@ -42,4 +42,4 @@ yarn run build
 * Throbber from [there](https://loading.io/spinner/triangles)
 * GIF encoding from the [library](https://github.com/jnordberg/gif.js)
 
-This experiment made with [state-control ![npm][npm-badge]][npm]
+This experiment is made with [state-control ![npm][npm-badge]][npm]
