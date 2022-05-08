@@ -27,13 +27,13 @@ Run in bash:
 ```Shell
 git clone git@github.com:bouvens/rgb-filter.git
 cd rgb-filter
-yarn
-yarn start
+npm install
+npm run start
 ```
 
 Also, there's a script for local build in the dist directory:
 ```Shell
-yarn run build
+npm run build
 ```
 
 ## References
