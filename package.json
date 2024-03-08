@@ -19,7 +19,7 @@
     "state-control": "^2.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.24.0",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/preset-env": "^7.4.5",
@@ -40,13 +40,13 @@
     "mini-css-extract-plugin": "^0.9.0",
     "postcss-modules": "^2.0.0",
     "style-loader": "^1.0.0",
-    "webpack": "^4.32.2",
+    "webpack": "^5.90.3",
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.4.1"
   },
   "engines": {
-    "node": "16.20.2",
-    "npm": "8.19.4-v"
+    "node": ">=20.11.1",
+    "npm": ">=10.2.4"
   },
   "author": "Alexander Demin <bouvens@gmail.com> (https://bouvens.github.io/)",
   "homepage": "https://bouvens.github.io/rgb-filter",
