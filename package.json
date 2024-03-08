@@ -44,6 +44,10 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.4.1"
   },
+  "engines": {
+    "node": "16.20.2",
+    "npm": "8.19.4-v"
+  },
   "author": "Alexander Demin <bouvens@gmail.com> (https://bouvens.github.io/)",
   "homepage": "https://bouvens.github.io/rgb-filter",
   "repository": "github:bouvens/rgb-filter",
